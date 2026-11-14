@@ -20,9 +20,9 @@
       const z = coords.z;
       const maxCol = Math.pow(2, z) - 1;
 
-      // Reject tiles outside the horizontal world bounds
+      // Return 1x1 transparent GIF for tiles outside planetary bounds to avoid network errors
       if (coords.x < 0 || coords.x > maxCol || coords.y < 0 || coords.y > maxCol) {
-        return '';
+        return (L.Util && L.Util.emptyImageUrl) ? L.Util.emptyImageUrl : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
       }
 
       // Convert Mercator tile coordinates to geographic lat/lng bounds
@@ -140,11 +140,10 @@
     definitions: LAYER_DEFINITIONS,
     activeLayerId: 'global-surface',
     activeBaseLayer: null,
-    overlayLayer: null,
-    overlayActive: false,
-    overlayOpacity: 1.0,
+    currentOpacity: 1.0,
     map: null,
     onStatusChange: null,
+    lastErrorLogged: 0,
 
     /**
      * Initialize Layer Manager with map instance
@@ -172,12 +171,9 @@
         ...options
       };
 
-      let layerInstance;
-      if (def.isEquirect) {
-        layerInstance = new PlanetaryEquirectTileLayer(def.url, tileOptions);
-      } else {
-        layerInstance = L.tileLayer(def.url, tileOptions);
-      }
+      const layerInstance = def.isEquirect
+        ? new PlanetaryEquirectTileLayer(def.url, tileOptions)
+        : L.tileLayer(def.url, tileOptions);
 
       // Tile Event Listeners
       layerInstance.on('loading', () => {
@@ -193,8 +189,13 @@
       });
 
       layerInstance.on('tileerror', (err) => {
-        console.warn(`Tile error on layer [${def.id}]:`, err);
-        // Fallback to secondary URL if defined and primary fails
+        const now = Date.now();
+        if (now - this.lastErrorLogged > 3000) {
+          console.warn(`Tile stream warning on layer [${def.id}]:`, err);
+          this.lastErrorLogged = now;
+        }
+
+        // Fallback to secondary URL once if defined and primary fails
         if (def.fallbackUrl && layerInstance._url !== def.fallbackUrl) {
           layerInstance.setUrl(def.fallbackUrl);
         }
@@ -227,57 +228,30 @@
 
       // Create and add new base layer
       this.activeLayerId = layerId;
-      this.activeBaseLayer = this.createTileLayer(def, { zIndex: 1 });
+      this.activeBaseLayer = this.createTileLayer(def, {
+        zIndex: 1,
+        opacity: this.currentOpacity
+      });
       this.activeBaseLayer.addTo(this.map);
-
-      // Keep overlay in sync if active
-      if (this.overlayActive && this.overlayLayer) {
-        this.overlayLayer.bringToFront();
-      }
 
       return true;
     },
 
     /**
-     * Enable or disable Satellite Imagery as an overlay on top of current basemap
+     * Set Layer Opacity (0.0 to 1.0)
      */
-    setOverlayActive: function (active) {
-      this.overlayActive = active;
-
-      if (active) {
-        if (!this.overlayLayer) {
-          const satDef = this.definitions['satellite-imagery'];
-          this.overlayLayer = this.createTileLayer(satDef, {
-            zIndex: 10,
-            opacity: this.overlayOpacity
-          });
-        }
-        if (!this.map.hasLayer(this.overlayLayer)) {
-          this.overlayLayer.addTo(this.map);
-          this.overlayLayer.setOpacity(this.overlayOpacity);
-        }
-      } else {
-        if (this.overlayLayer && this.map.hasLayer(this.overlayLayer)) {
-          this.map.removeLayer(this.overlayLayer);
-        }
+    setSatelliteOpacity: function (opacityVal) {
+      this.currentOpacity = Math.max(0, Math.min(1, opacityVal));
+      if (this.activeBaseLayer) {
+        this.activeBaseLayer.setOpacity(this.currentOpacity);
       }
     },
 
     /**
-     * Set Opacity of the Satellite Imagery layer (0.0 to 1.0)
+     * Alias for general opacity adjustment
      */
-    setSatelliteOpacity: function (opacityVal) {
-      this.overlayOpacity = Math.max(0, Math.min(1, opacityVal));
-
-      // If active base layer is satellite imagery, adjust its opacity directly
-      if (this.activeLayerId === 'satellite-imagery' && this.activeBaseLayer) {
-        this.activeBaseLayer.setOpacity(this.overlayOpacity);
-      }
-
-      // If satellite overlay is active, adjust overlay opacity
-      if (this.overlayLayer) {
-        this.overlayLayer.setOpacity(this.overlayOpacity);
-      }
+    setOpacity: function (opacityVal) {
+      this.setSatelliteOpacity(opacityVal);
     },
 
     /**

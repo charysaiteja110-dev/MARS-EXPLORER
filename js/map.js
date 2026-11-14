@@ -91,24 +91,34 @@
     },
 
     /**
-     * Bind map tracking events
+     * Bind map tracking events with 60fps frame debouncing
      */
     bindEvents: function () {
       const map = this.map;
+      let mouseRaf = null;
+      let moveRaf = null;
 
       // Mousemove coordinate tracking
       map.on('mousemove', (e) => {
-        if (typeof this.onMouseMoveCallback === 'function') {
-          this.onMouseMoveCallback(e.latlng.lat, e.latlng.lng);
-        }
+        if (mouseRaf) return;
+        mouseRaf = window.requestAnimationFrame(() => {
+          if (typeof this.onMouseMoveCallback === 'function') {
+            this.onMouseMoveCallback(e.latlng.lat, e.latlng.lng);
+          }
+          mouseRaf = null;
+        });
       });
 
       // Pan & drag center tracking
       map.on('move', () => {
-        const center = map.getCenter();
-        if (typeof this.onMoveCallback === 'function') {
-          this.onMoveCallback(center.lat, center.lng);
-        }
+        if (moveRaf) return;
+        moveRaf = window.requestAnimationFrame(() => {
+          const center = map.getCenter();
+          if (typeof this.onMoveCallback === 'function') {
+            this.onMoveCallback(center.lat, center.lng);
+          }
+          moveRaf = null;
+        });
       });
 
       // Zoom level tracking

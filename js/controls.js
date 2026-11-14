@@ -296,10 +296,17 @@
         });
       }
 
-      // Refresh Tile Link
+      // Refresh Tile Link & Initialization Retry Button
       if (this.dom.retryTileLink) {
         this.dom.retryTileLink.addEventListener('click', (e) => {
           e.preventDefault();
+          if (window.MarsLayers) {
+            window.MarsLayers.setBaseLayer(window.MarsLayers.activeLayerId);
+          }
+        });
+      }
+      if (this.dom.retryInitBtn) {
+        this.dom.retryInitBtn.addEventListener('click', () => {
           if (window.MarsLayers) {
             window.MarsLayers.setBaseLayer(window.MarsLayers.activeLayerId);
           }
@@ -324,13 +331,19 @@
           if (this.currentLandmark) {
             const coordsStr = window.MarsMapEngine.formatCoords(this.currentLandmark.lat, this.currentLandmark.lng);
             const text = `${this.currentLandmark.name}: ${coordsStr}`;
-            navigator.clipboard.writeText(text).then(() => {
+            const handleSuccess = () => {
               const orig = this.dom.drawerCopyBtn.textContent;
               this.dom.drawerCopyBtn.textContent = 'COPIED!';
               setTimeout(() => {
                 this.dom.drawerCopyBtn.textContent = orig;
               }, 1800);
-            }).catch(() => alert(text));
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(handleSuccess).catch(() => prompt('Martian Landmark Coordinates:', text));
+            } else {
+              prompt('Martian Landmark Coordinates:', text);
+            }
           }
         });
       }

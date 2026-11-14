@@ -302,19 +302,22 @@
       if (typeof this.onSelect === 'function') {
         this.onSelect(item);
       }
-    }
-  };
+    },
 
-  // Expose to window
-  window.MarsLocations = LocationsManager;
-  window.marsLocations = {
+    /**
+     * Inspect location by ID (called from popup button or external triggers)
+     */
     inspect: function (id) {
-      const item = LocationsManager.getById(id);
-      if (item && typeof LocationsManager.onSelect === 'function') {
-        LocationsManager.onSelect(item);
+      const item = this.getById(id);
+      if (item && typeof this.onSelect === 'function') {
+        this.onSelect(item);
       }
     }
   };
+
+  // Expose to window (with lowercase alias for popup onclick compatibility)
+  window.MarsLocations = LocationsManager;
+  window.marsLocations = LocationsManager;
 
 })(window);
 

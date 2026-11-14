@@ -126,7 +126,41 @@
         landingDate: 'January 4, 2004'
       },
       summary: 'Landing site of the Spirit rover. Ma\'adim Vallis, one of the largest river channels on Mars, carved directly into Gusev Crater, leaving basaltic and silica-rich volcanic hydrothermal deposits at the Columbia Hills.',
-      mission: 'Mars Exploration Rover Spirit operated from 2004 to 2010.',
+      mission: 'Mars Exploration Rover Spirit operated from 2004 to 2010 (JPL D-92756).',
+      quadrangle: 'MC-23 Aeolis'
+    },
+    {
+      id: 'home-plate',
+      name: 'Home Plate (Gusev Crater)',
+      category: 'Volcaniclastic Plateau',
+      lat: -14.606,
+      lng: 175.526,
+      zoom: 9,
+      stats: {
+        diameter: '~90 meters across',
+        elevation: '-1,920 m datum',
+        feature: 'Phreatomagmatic Surge',
+        discovery: 'Pure Opaline Silica (>90%)'
+      },
+      summary: 'An eroded plateau of volcaniclastic ash layers formed by explosive volcanic surge eruptions into surface water or ice. Spirit discovered pure opaline silica here, proving active ancient hydrothermal fumaroles.',
+      mission: 'Surveyed by Spirit across Sols 744–2210; site of Routes 1, 2, and 3 traversability evaluations (JPL D-92756).',
+      quadrangle: 'MC-23 Aeolis'
+    },
+    {
+      id: 'troy-embedding',
+      name: 'Troy (Spirit Embedding Site)',
+      category: 'Historical Rover Case Study',
+      lat: -14.608,
+      lng: 175.524,
+      zoom: 10,
+      stats: {
+        solEmbedded: 'Sol 1886 (May 2009)',
+        hazardType: 'Concealed Sulfate Sand',
+        terrainSlope: '~12 degrees south tilt',
+        lastContact: 'Sol 2210 (March 22, 2010)'
+      },
+      summary: 'Historical case study site where Spirit broke through a thin indurated surface crust into loose, un-cemented ferric and magnesium sulfate sands. Wheels experienced 99.7% slip, leading to LM wheel failure and stationary winter mode.',
+      mission: 'Subject of Chapter 6 (Hazard Mapping) and Chapter 7 (Extrication) in NASA MER Spirit Report JPL D-92756.',
       quadrangle: 'MC-23 Aeolis'
     },
     {

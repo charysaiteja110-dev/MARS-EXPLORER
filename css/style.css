@@ -1,79 +1,81 @@
 /* ==========================================================================
-   MARS EXPLORER PRO — Professional Planetary Cartography & GIS Interface
-   Design System: Scientific Space Research / Planetary Visualization
+   MARS EXPLORER COMMAND CENTER — Scientific GIS & NASA Spirit Mission Platform
+   Official Source: NASA MER Spirit End of Mission Report (JPL D-92756)
+   Design System: Dark Planetary Command Center & Calibrated Mars GIS
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. Design Tokens & CSS Custom Properties
+   1. Part 1 — Official Color Tokens & System Properties
    -------------------------------------------------------------------------- */
 :root {
-  /* Surface & Background Palette (Deep Space Charcoal) */
-  --bg-canvas: #080a0d;
-  --bg-surface: #0f1319;
-  --bg-surface-elevated: #161c24;
-  --bg-surface-highlight: #1d2532;
-  --bg-hover: #222b3a;
-  --bg-active: #293446;
+  /* Master Interface Palette (Strictly from Part 1) */
+  --bg-main: #100F0F;
+  --bg-sidebar: #080808;
+  --panel-primary: #211D1B;
+  --panel-secondary: #302A27;
+  --panel-hover: #3D3532;
+  --border-color: #45403C;
+  --border-subtle: #2C2725;
+  --text-primary: #F2EFEC;
+  --text-secondary: #A7A09A;
+  --text-muted: #736C66;
+  --mars-accent: #D87932;
+  --mars-accent-dark: #B06028;
+  --mars-accent-subtle: rgba(216, 121, 50, 0.15);
 
-  /* Borders & Dividers */
-  --border-subtle: #1c232f;
-  --border-medium: #283344;
-  --border-strong: #38465c;
-  --border-focus: #d9532f;
+  /* Mars Map Palette */
+  --terrain-main: #B06040;
+  --terrain-lighter: #C08050;
+  --terrain-highlight: #D0A060;
+  --terrain-dark: #A06040;
+  --terrain-crater: #804830;
+  --label-geographic: #FFF1DC;
+  --marker-location: #F47745;
 
-  /* Mars Accent Palette (Muted Rust, Terracotta & Sand) */
-  --mars-rust: #d9532f;
-  --mars-rust-dark: #b84223;
-  --mars-rust-light: #e66845;
-  --mars-rust-subtle: rgba(217, 83, 47, 0.14);
-  --mars-terracotta: #e06d48;
-  --mars-sand: #d18d63;
-  --mars-amber: #eab308;
-  --mars-red-deep: #47170c;
+  /* Part 7 — Rover Traversability Hazard Palette */
+  --trav-green: #20A66A;
+  --trav-green-bg: rgba(32, 166, 106, 0.16);
+  --trav-yellow: #E9B949;
+  --trav-yellow-bg: rgba(233, 185, 73, 0.16);
+  --trav-red: #D94A45;
+  --trav-red-bg: rgba(217, 74, 69, 0.16);
+  --trav-grey: #777D83;
+  --trav-grey-bg: rgba(119, 125, 131, 0.16);
 
-  /* Scientific State Badges */
-  --status-green: #22c55e;
-  --status-green-bg: rgba(34, 197, 94, 0.12);
-  --status-amber: #f59e0b;
-  --status-amber-bg: rgba(245, 158, 11, 0.12);
-  --status-red: #ef4444;
-  --status-red-bg: rgba(239, 68, 68, 0.12);
+  /* Part 4 — NASA Figure 6.2 Classification Palette */
+  --nasa-purple: #9333EA;
+  --nasa-lightgreen: #4ADE80;
+  --nasa-greygreen: #4B7C59;
+  --nasa-white: #F3F4F6;
+  --nasa-orange: #F97316;
+  --nasa-darkblue: #1E40AF;
+  --nasa-red: #EF4444;
 
-  /* Typography Colors */
-  --text-primary: #e6edf3;
-  --text-secondary: #94a1b2;
-  --text-muted: #5e6b7d;
-  --text-accent: #e66845;
-
-  /* Typography Stacks */
+  /* Typography */
   --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Rajdhani', 'Inter', -apple-system, sans-serif;
-  --font-mono: 'Space Mono', 'SF Mono', Consolas, 'Courier New', monospace;
+  --font-heading: 'Rajdhani', 'Inter', -apple-system, sans-serif;
+  --font-mono: 'Space Mono', 'SF Mono', Consolas, monospace;
 
-  /* Geometry & Layout Dimensions */
-  --top-nav-height: 48px;
-  --status-bar-height: 28px;
-  --sidebar-width: 320px;
-  --drawer-width: 360px;
+  /* Layout Constants */
+  --sidebar-width: 240px;
+  --top-bar-height: 48px;
+  --status-bar-height: 30px;
 
-  /* Border Radii */
+  /* Radii & Shadows */
   --radius-xs: 3px;
   --radius-sm: 5px;
   --radius-md: 7px;
   --radius-lg: 10px;
-
-  /* Elevation & Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.55);
-  --shadow-floating: 0 10px 30px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border-medium);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-floating: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 0 1px var(--border-color);
 
   /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  --trans-fast: 0.14s ease;
+  --trans-smooth: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* --------------------------------------------------------------------------
-   2. Reset & Global Standards
+   2. Reset & Document Baseline
    -------------------------------------------------------------------------- */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -85,7 +87,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: var(--bg-canvas);
+  background-color: var(--bg-main);
   color: var(--text-primary);
   font-family: var(--font-ui);
   font-size: 13px;
@@ -102,840 +104,381 @@ button, input, select, textarea {
 }
 
 /* --------------------------------------------------------------------------
-   3. Main Application Grid Layout
+   3. Master Command Center Grid Layout
    -------------------------------------------------------------------------- */
-.app-layout {
+.command-layout {
   display: flex;
-  flex-direction: column;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  position: relative;
+  background-color: var(--bg-main);
 }
 
 /* --------------------------------------------------------------------------
-   4. Compact Top Navigation & Command Bar
+   4. Dark Left Navigation Sidebar
    -------------------------------------------------------------------------- */
-.top-nav {
-  height: var(--top-nav-height);
-  background-color: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
+.command-sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 1000;
+  transition: width var(--trans-smooth), margin-left var(--trans-smooth);
+}
+
+.command-sidebar.collapsed {
+  width: 58px;
+}
+
+.command-sidebar.collapsed .mission-titles,
+.command-sidebar.collapsed .nav-label,
+.command-sidebar.collapsed .sidebar-footer {
+  display: none;
+}
+
+.command-sidebar.collapsed .sidebar-collapse-btn svg {
+  transform: rotate(180deg);
+}
+
+.sidebar-header {
+  height: var(--top-bar-height);
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(33, 29, 27, 0.4);
+}
+
+.mission-patch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-xs);
+  background: var(--mars-accent-subtle);
+  border: 1px solid var(--mars-accent);
+  color: var(--mars-accent);
+  flex-shrink: 0;
+}
+
+.mission-titles {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.mission-name {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.mission-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.sidebar-collapse-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  transition: all var(--trans-fast);
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--panel-primary);
+  color: var(--text-primary);
+}
+
+/* Sidebar Navigation Items */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+  white-space: nowrap;
+}
+
+.nav-item svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color var(--trans-fast);
+}
+
+.nav-item:hover {
+  background-color: var(--panel-primary);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.nav-item:hover svg {
+  color: var(--mars-accent);
+}
+
+.nav-item.active {
+  background-color: var(--panel-primary);
+  color: var(--text-primary);
+  border-color: var(--mars-accent);
+  box-shadow: inset 3px 0 0 var(--mars-accent);
+}
+
+.nav-item.active svg {
+  color: var(--mars-accent);
+}
+
+.sidebar-footer {
+  padding: 10px;
+  border-top: 1px solid var(--border-color);
+  background-color: rgba(16, 15, 15, 0.7);
+}
+
+.footer-stat-box {
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.f-stat-title {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--mars-accent);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.f-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-secondary);
+}
+
+.stat-highlight {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.stat-source {
+  font-family: var(--font-mono);
+  color: var(--terrain-highlight);
+}
+
+/* --------------------------------------------------------------------------
+   5. Command Workspace
+   -------------------------------------------------------------------------- */
+.command-workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Compact Top Command Navigation Bar */
+.top-command-bar {
+  height: var(--top-bar-height);
+  background-color: var(--panel-primary);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 14px;
   flex-shrink: 0;
-  z-index: 1000;
-  position: relative;
+  z-index: 500;
 }
 
-.nav-left {
+.top-bar-left {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.sidebar-toggle-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.sidebar-toggle-btn:hover {
-  background: var(--bg-hover);
-  color: #ffffff;
-  border-color: var(--border-medium);
-}
-
-.sidebar-toggle-btn.active {
-  color: var(--mars-rust-light);
-  border-color: var(--mars-rust);
-  background: var(--mars-rust-subtle);
-}
-
-.brand-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-sm);
-  background: var(--mars-rust-subtle);
-  border: 1px solid var(--mars-rust);
-  color: var(--mars-rust-light);
-  flex-shrink: 0;
-}
-
-.brand-titles {
+.app-title-group {
   display: flex;
   flex-direction: column;
 }
 
-.brand-name {
-  font-family: var(--font-display);
+.app-title {
+  font-family: var(--font-heading);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  text-transform: uppercase;
+  color: var(--text-primary);
 }
 
-.brand-badge {
+.app-sub {
   font-family: var(--font-mono);
   font-size: 9px;
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: var(--radius-xs);
-  background: var(--mars-rust-subtle);
-  color: var(--mars-rust-light);
-  border: 1px solid rgba(217, 83, 47, 0.4);
-}
-
-.brand-sub {
-  font-family: var(--font-mono);
-  font-size: 10px;
   color: var(--text-muted);
   letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
 
-.sub-sep {
-  opacity: 0.5;
-}
-
-.layer-badge {
-  color: var(--mars-sand);
-  font-weight: 600;
-}
-
-.source-badge {
-  color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.06);
-  padding: 1px 4px;
-  border-radius: var(--radius-xs);
-}
-
-/* Nav Center: Scientific Telemetry Clocks */
-.nav-center {
+.top-bar-center {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.telemetry-pill {
+.sol-clock-badge {
   display: flex;
   align-items: center;
-  gap: 7px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+  gap: 6px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
   padding: 4px 10px;
   font-family: var(--font-mono);
   font-size: 11px;
+  color: var(--text-primary);
+}
+
+.sol-clock-badge svg {
+  color: var(--mars-accent);
+}
+
+.clock-divider {
+  color: var(--border-color);
+}
+
+.stream-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   color: var(--text-secondary);
 }
 
-.telemetry-pill svg {
-  color: var(--mars-rust-light);
-}
-
-.telemetry-pill.live {
-  gap: 6px;
-}
-
-.status-indicator-dot {
+.status-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: var(--status-green);
-  box-shadow: 0 0 6px var(--status-green);
+  background-color: var(--trav-green);
+  box-shadow: 0 0 6px var(--trav-green);
 }
 
-.status-indicator-dot.warning {
-  background-color: var(--status-amber);
-  box-shadow: 0 0 6px var(--status-amber);
-}
-
-.status-indicator-dot.error {
-  background-color: var(--status-red);
-  box-shadow: 0 0 6px var(--status-red);
-}
-
-.pill-value {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.pill-divider {
-  color: var(--text-muted);
-}
-
-/* Nav Right: Action Controls */
-.nav-right {
+.top-bar-right {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.quick-jump-wrapper {
+.dropdown-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
-.nav-select {
+.command-select {
   appearance: none;
-  -webkit-appearance: none;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
   color: var(--text-primary);
-  padding: 5px 28px 5px 10px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 5px 24px 5px 8px;
+  font-size: 11px;
   cursor: pointer;
   outline: none;
-  transition: all var(--transition-fast);
+  transition: all var(--trans-fast);
 }
 
-.nav-select:hover, .nav-select:focus {
-  border-color: var(--border-medium);
-  background: var(--bg-hover);
+.command-select:hover, .command-select:focus {
+  border-color: var(--mars-accent);
 }
 
-.select-chevron {
-  position: absolute;
-  right: 8px;
-  pointer-events: none;
-  color: var(--text-muted);
-}
-
-.nav-action-btn {
+.cmd-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding: 0 10px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+  gap: 5px;
+  height: 28px;
+  padding: 0 9px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
-  outline: none;
-  transition: all var(--transition-fast);
+  transition: all var(--trans-fast);
 }
 
-.nav-action-btn:hover {
-  background: var(--bg-hover);
-  color: #ffffff;
-  border-color: var(--border-medium);
+.cmd-btn:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
+  border-color: var(--mars-accent);
 }
 
-.nav-action-btn.active {
-  background: var(--mars-rust-subtle);
-  border-color: var(--mars-rust);
-  color: var(--mars-rust-light);
+.cmd-btn.active {
+  background-color: var(--mars-accent-subtle);
+  border-color: var(--mars-accent);
+  color: var(--mars-accent);
 }
 
-.nav-action-btn.icon-only {
-  width: 30px;
+.cmd-btn.icon-only {
+  width: 28px;
   padding: 0;
   justify-content: center;
 }
 
 /* --------------------------------------------------------------------------
-   5. Main Application Workspace Area
+   6. Map Central Viewport
    -------------------------------------------------------------------------- */
-.app-main {
+.map-central-viewport {
   flex: 1;
+  position: relative;
   min-height: 0;
-  display: flex;
-  position: relative;
-  overflow: hidden;
-}
-
-/* --------------------------------------------------------------------------
-   6. Collapsible Left Exploration Sidebar
-   -------------------------------------------------------------------------- */
-.app-sidebar {
-  width: var(--sidebar-width);
-  background-color: var(--bg-surface);
-  border-right: 1px solid var(--border-subtle);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  z-index: 500;
-  position: relative;
-  transition: margin-left var(--transition-normal);
-}
-
-.app-sidebar.collapsed {
-  margin-left: calc(-1 * var(--sidebar-width));
-}
-
-.sidebar-header {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.sidebar-title {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.sidebar-close-mobile-btn {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-/* Segmented Tab Bar */
-.sidebar-tabs {
-  display: flex;
-  background: var(--bg-surface-elevated);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 3px;
-  gap: 2px;
-}
-
-.sidebar-tab-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 28px;
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-xs);
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.sidebar-tab-btn:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.sidebar-tab-btn.active {
-  background: var(--bg-surface);
-  color: var(--mars-rust-light);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-/* Tab Content Areas */
-.sidebar-tab-content {
-  display: none;
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  flex-direction: column;
-}
-
-.sidebar-tab-content.active {
-  display: flex;
-}
-
-.sidebar-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.section-title {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-}
-
-.section-hint {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--text-muted);
-}
-
-/* Layer Cards inside Sidebar */
-.layer-cards-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.layer-card {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: relative;
-}
-
-.layer-card:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-medium);
-}
-
-.layer-card.active {
-  background: var(--bg-surface-highlight);
-  border-color: var(--mars-rust);
-  box-shadow: inset 3px 0 0 var(--mars-rust);
-}
-
-.layer-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.layer-card-title {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.layer-card.active .layer-card-title {
-  color: var(--mars-rust-light);
-}
-
-.layer-card-badge {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--mars-sand);
-}
-
-.layer-card.active .layer-card-badge {
-  background: var(--mars-rust);
-  color: #ffffff;
-}
-
-.layer-card-desc {
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.4;
-}
-
-.layer-card-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--text-muted);
-  border-top: 1px dashed var(--border-subtle);
-  padding-top: 5px;
-  margin-top: 3px;
-}
-
-/* Opacity Slider Control */
-.opacity-control-section {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.opacity-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.opacity-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.opacity-val-badge {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--mars-rust-light);
-}
-
-.opacity-slider-input {
-  width: 100%;
-  height: 4px;
-  appearance: none;
-  -webkit-appearance: none;
-  background: var(--border-medium);
-  border-radius: 2px;
-  outline: none;
-  cursor: pointer;
-}
-
-.opacity-slider-input::-webkit-slider-thumb {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--mars-rust);
-  border: 2px solid #ffffff;
-  cursor: pointer;
-  transition: transform var(--transition-fast);
-}
-
-.opacity-slider-input::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
-
-.opacity-presets {
-  display: flex;
-  gap: 4px;
-}
-
-.opacity-preset-btn {
-  flex: 1;
-  height: 22px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xs);
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.opacity-preset-btn:hover {
-  color: #ffffff;
-  border-color: var(--border-medium);
-}
-
-.opacity-preset-btn.active {
-  background: var(--mars-rust-subtle);
-  border-color: var(--mars-rust);
-  color: var(--mars-rust-light);
-}
-
-/* Tab 2: Landmark Directory List */
-.landmark-search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 6px 10px;
-  margin-bottom: 8px;
-}
-
-.landmark-search-box svg {
-  color: var(--text-muted);
-}
-
-.search-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 12px;
-  color: var(--text-primary);
-}
-
-.search-input::placeholder {
-  color: var(--text-muted);
-}
-
-.category-filters {
-  display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  padding-bottom: 6px;
-  margin-bottom: 8px;
-}
-
-.filter-chip {
-  padding: 3px 8px;
-  border-radius: 12px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 10px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all var(--transition-fast);
-}
-
-.filter-chip:hover {
-  color: #ffffff;
-  border-color: var(--border-medium);
-}
-
-.filter-chip.active {
-  background: var(--mars-rust-subtle);
-  border-color: var(--mars-rust);
-  color: var(--mars-rust-light);
-}
-
-.landmark-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow-y: auto;
-}
-
-.landmark-item-card {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.landmark-item-card:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-medium);
-}
-
-.landmark-item-card.active {
-  border-color: var(--mars-rust);
-  background: var(--bg-surface-highlight);
-  box-shadow: inset 3px 0 0 var(--mars-rust);
-}
-
-.item-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.item-category {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--mars-sand);
-}
-
-.item-name {
-  font-weight: 600;
-  font-size: 12px;
-  color: #ffffff;
-}
-
-.item-coords {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-muted);
-}
-
-.item-chevron {
-  color: var(--text-muted);
-}
-
-/* Tab 3: Tools & Settings */
-.tools-toggle-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.tool-toggle-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 10px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-.toggle-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.toggle-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.toggle-desc {
-  font-size: 10px;
-  color: var(--text-muted);
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 36px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: var(--border-medium);
-  transition: 0.2s;
-  border-radius: 20px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 14px;
-  width: 14px;
-  left: 3px;
-  bottom: 3px;
-  background-color: #ffffff;
-  transition: 0.2s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: var(--mars-rust);
-}
-
-input:checked + .slider:before {
-  transform: translateX(16px);
-}
-
-.sidebar-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.sidebar-action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 34px;
-  background: var(--mars-rust);
-  border: 1px solid var(--mars-rust-light);
-  border-radius: var(--radius-sm);
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.sidebar-action-btn:hover {
-  background: var(--mars-rust-dark);
-}
-
-.sidebar-action-btn.secondary {
-  background: var(--bg-surface-elevated);
-  border-color: var(--border-subtle);
-  color: var(--text-secondary);
-}
-
-.sidebar-action-btn.secondary:hover {
-  background: var(--bg-hover);
-  color: #ffffff;
-  border-color: var(--border-medium);
-}
-
-.constants-card {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.const-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-}
-
-.const-label {
-  color: var(--text-muted);
-}
-
-.const-val {
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-/* --------------------------------------------------------------------------
-   7. Central Map Workspace
-   -------------------------------------------------------------------------- */
-.map-workspace {
-  flex: 1;
-  position: relative;
-  min-width: 0;
-  height: 100%;
-  background-color: #07090c;
+  background-color: var(--bg-main);
 }
 
 #mars-map {
@@ -947,24 +490,22 @@ input:checked + .slider:before {
   outline: none;
 }
 
+/* Leaflet Attribution & Scale Custom Styling */
 .leaflet-container {
   background-color: #07090c !important;
   font-family: var(--font-ui) !important;
 }
 
-/* Leaflet Attribution & Scale Custom Styling */
 .leaflet-control-attribution {
-  background: rgba(15, 19, 25, 0.85) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(16, 15, 15, 0.85) !important;
   color: var(--text-muted) !important;
   font-family: var(--font-mono) !important;
-  font-size: 10px !important;
-  border-top-left-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
+  font-size: 9px !important;
+  border-top-left-radius: var(--radius-xs);
+  border: 1px solid var(--border-color);
   border-right: none;
   border-bottom: none;
-  padding: 2px 8px !important;
+  padding: 2px 6px !important;
 }
 
 .leaflet-control-attribution a {
@@ -973,12 +514,12 @@ input:checked + .slider:before {
 }
 
 .leaflet-control-attribution a:hover {
-  color: var(--mars-rust-light) !important;
+  color: var(--mars-accent) !important;
 }
 
 .leaflet-control-scale-line {
-  background: rgba(15, 19, 25, 0.85) !important;
-  border: 1px solid var(--border-subtle) !important;
+  background: rgba(16, 15, 15, 0.85) !important;
+  border: 1px solid var(--border-color) !important;
   border-top: none !important;
   color: var(--text-secondary) !important;
   font-family: var(--font-mono) !important;
@@ -986,31 +527,24 @@ input:checked + .slider:before {
   padding: 1px 6px !important;
 }
 
-/* Floating Navigation HUD (Top-Right of Map) */
-.map-controls-hud {
+/* Map Navigation HUD (Top-Right of Map) */
+.map-nav-hud {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 12px;
+  right: 12px;
   z-index: 400;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  pointer-events: auto;
-}
-
-.control-group {
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
   padding: 3px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
 }
 
-.hud-btn {
-  width: 32px;
-  height: 32px;
+.map-hud-btn {
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1019,69 +553,62 @@ input:checked + .slider:before {
   border-radius: var(--radius-xs);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
-  outline: none;
+  transition: all var(--trans-fast);
   position: relative;
 }
 
-.hud-btn:hover {
-  background: var(--bg-hover);
-  color: #ffffff;
+.map-hud-btn:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
 }
 
-.hud-btn:active {
-  transform: scale(0.95);
-}
-
-.hud-btn[data-tooltip]::before {
+.map-hud-btn[data-tooltip]::before {
   content: attr(data-tooltip);
   position: absolute;
   right: calc(100% + 8px);
   top: 50%;
-  transform: translateY(-50%) translateX(4px);
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-medium);
+  transform: translateY(-50%);
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-xs);
-  padding: 3px 7px;
+  padding: 3px 6px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-primary);
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  transition: opacity var(--trans-fast);
   z-index: 500;
 }
 
-.hud-btn:hover::before {
+.map-hud-btn:hover::before {
   opacity: 1;
-  transform: translateY(-50%) translateX(0);
 }
 
-.zoom-indicator {
-  height: 22px;
+.zoom-badge {
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  color: var(--mars-rust-light);
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
+  color: var(--mars-accent);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.hud-divider {
-  width: 18px;
+.hud-sep {
+  width: 16px;
   height: 1px;
-  background: var(--border-subtle);
+  background-color: var(--border-color);
   margin: 3px auto;
 }
 
-.compass-box {
-  width: 32px;
-  height: 32px;
+.compass-hud {
+  width: 30px;
+  height: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1089,312 +616,886 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 
-.compass-box svg {
-  color: var(--mars-rust-light);
+.compass-hud svg {
+  color: var(--mars-accent);
 }
 
-.compass-box .north-label {
+.north-marker {
   font-family: var(--font-mono);
   font-size: 7px;
   font-weight: 700;
-  color: var(--mars-rust-light);
+  color: var(--mars-accent);
   margin-top: -3px;
 }
 
-/* Floating Distance Measurement HUD (Bottom-Right of Map) */
-.measure-hud {
+/* Spheroid Distance Measurement HUD Card */
+.measure-hud-card {
   position: absolute;
   bottom: 16px;
   right: 16px;
   z-index: 450;
-  background: var(--bg-surface);
-  border: 1px solid var(--mars-rust);
-  border-radius: var(--radius-md);
+  background-color: var(--panel-primary);
+  border: 1px solid var(--mars-accent);
+  border-radius: var(--radius-sm);
   padding: 10px 14px;
   box-shadow: var(--shadow-floating);
   display: none;
   flex-direction: column;
-  gap: 6px;
-  width: 280px;
-  pointer-events: auto;
+  gap: 5px;
+  width: 270px;
 }
 
-.measure-hud.active {
+.measure-hud-card.active {
   display: flex;
 }
 
-.measure-header {
+.m-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.measure-title {
-  font-family: var(--font-display);
+.m-title {
+  font-family: var(--font-heading);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: var(--mars-rust-light);
+  color: var(--mars-accent);
   text-transform: uppercase;
 }
 
-.measure-sub {
+.m-sub {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 8px;
   color: var(--text-muted);
 }
 
-.measure-result {
+.m-result {
   font-family: var(--font-mono);
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   color: #ffffff;
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 4px;
 }
 
-.measure-unit {
-  font-size: 11px;
-  color: var(--mars-sand);
+.m-unit {
+  font-size: 10px;
+  color: var(--terrain-highlight);
 }
 
-.measure-hint {
+.m-hint {
   font-family: var(--font-mono);
   font-size: 9px;
   color: var(--text-muted);
 }
 
-.measure-actions {
+.m-actions {
   display: flex;
   gap: 6px;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
-.measure-btn {
+.m-btn {
   flex: 1;
-  height: 26px;
+  height: 24px;
   border-radius: var(--radius-xs);
   font-family: var(--font-mono);
   font-size: 10px;
   cursor: pointer;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
   color: var(--text-secondary);
-  transition: all var(--transition-fast);
+  transition: all var(--trans-fast);
 }
 
-.measure-btn:hover {
-  background: var(--bg-hover);
-  color: #ffffff;
+.m-btn:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
 }
 
-.measure-btn.primary {
-  background: var(--mars-rust);
-  border-color: var(--mars-rust-light);
+.m-btn.primary {
+  background-color: var(--mars-accent);
+  border-color: var(--mars-accent);
   color: #ffffff;
 }
 
 /* --------------------------------------------------------------------------
-   8. Contextual Landmark Details Drawer (Slides in from Right)
+   7. Flyout Panels (Layer Drawer & Contextual Landmark Drawer)
    -------------------------------------------------------------------------- */
+.map-layer-drawer {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  bottom: 12px;
+  width: 310px;
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-floating);
+  z-index: 600;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.map-layer-drawer.open {
+  display: flex;
+}
+
 .landmark-drawer {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: var(--drawer-width);
-  background-color: var(--bg-surface);
-  border-left: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-panel);
+  top: 12px;
+  right: 12px;
+  bottom: 12px;
+  width: 340px;
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-floating);
   z-index: 600;
-  display: flex;
+  display: none;
   flex-direction: column;
-  transform: translateX(100%);
-  transition: transform var(--transition-normal);
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .landmark-drawer.open {
-  transform: translateX(0);
+  display: flex;
 }
 
-.drawer-header {
-  padding: 14px 16px;
-  background: var(--bg-surface-elevated);
-  border-bottom: 1px solid var(--border-subtle);
+.drawer-panel-header {
+  padding: 10px 12px;
+  background-color: var(--panel-secondary);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 }
 
-.drawer-title-group {
-  display: flex;
-  flex-direction: column;
+.d-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
 }
 
-.drawer-category {
+.d-category {
   font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--mars-rust-light);
-  letter-spacing: 1px;
+  font-size: 8px;
+  color: var(--mars-accent);
   text-transform: uppercase;
-}
-
-.drawer-title {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
   letter-spacing: 0.5px;
 }
 
-.drawer-close-btn {
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xs);
-  color: var(--text-secondary);
+.d-main-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  transition: all var(--trans-fast);
 }
 
-.drawer-close-btn:hover {
-  color: #ffffff;
-  background: var(--bg-hover);
+.close-btn:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
 }
 
-.drawer-content {
-  padding: 14px 16px;
+.drawer-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
-.landmark-stats-grid {
+/* Layer Cards */
+.layer-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.layer-card {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  transition: all var(--trans-fast);
+}
+
+.layer-card:hover {
+  background-color: var(--panel-hover);
+  border-color: var(--text-muted);
+}
+
+.layer-card.active {
+  background-color: rgba(216, 121, 50, 0.12);
+  border-color: var(--mars-accent);
+  box-shadow: inset 3px 0 0 var(--mars-accent);
+}
+
+.layer-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.layer-card-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.layer-card.active .layer-card-title {
+  color: var(--mars-accent);
+}
+
+.layer-card-badge {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  padding: 1px 5px;
+  border-radius: var(--radius-xs);
+  background-color: var(--panel-primary);
+  color: var(--terrain-highlight);
+  border: 1px solid var(--border-color);
+}
+
+.layer-card-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.layer-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 4px;
+  margin-top: 2px;
+}
+
+.layer-opacity-box {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.opacity-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.slider-input {
+  width: 100%;
+  height: 4px;
+  appearance: none;
+  background-color: var(--border-color);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider-input::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--mars-accent);
+  border: 1px solid #ffffff;
+  cursor: pointer;
+}
+
+.opacity-presets-row {
+  display: flex;
+  gap: 3px;
+}
+
+.opacity-preset-btn {
+  flex: 1;
+  height: 20px;
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.opacity-preset-btn:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
+}
+
+.opacity-preset-btn.active {
+  background-color: var(--mars-accent-subtle);
+  border-color: var(--mars-accent);
+  color: var(--mars-accent);
+}
+
+/* Landmark Detail Drawer Stats */
+.d-stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 6px;
 }
 
-.stat-card {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 7px 9px;
+.d-stat-box {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
 }
 
-.stat-label {
+.d-stat-label {
   font-family: var(--font-mono);
   font-size: 8px;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-.stat-val {
+.d-stat-val {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--mars-sand);
+  color: var(--terrain-highlight);
   margin-top: 2px;
 }
 
-.drawer-section {
+.d-section {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.section-label {
+.d-section-label {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
-  letter-spacing: 0.5px;
   color: var(--text-muted);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.landmark-desc {
-  font-size: 12px;
+.d-summary-text {
+  font-size: 11px;
   line-height: 1.5;
   color: var(--text-secondary);
 }
 
-.mission-text {
+.d-mission-text {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
-  border-left: 2px solid var(--mars-rust);
+  border-left: 2px solid var(--mars-accent);
   padding-left: 8px;
 }
 
-.landmark-actions {
+.d-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-top: 4px;
 }
 
-.drawer-btn {
+.d-btn {
+  flex: 1;
+  height: 30px;
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.d-btn.primary {
+  background-color: var(--mars-accent);
+  border: 1px solid var(--mars-accent);
+  color: #ffffff;
+}
+
+.d-btn.primary:hover {
+  background-color: var(--mars-accent-dark);
+}
+
+.d-btn.secondary {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.d-btn.secondary:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   8. Full Modal Window for Sections (Report, Timeline, Appendix, Risk Matrix)
+   -------------------------------------------------------------------------- */
+.command-modal-container {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(16, 15, 15, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 800;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.command-modal-container.open {
+  display: flex;
+}
+
+.command-modal-box {
+  width: 960px;
+  max-width: 96vw;
+  height: 88vh;
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-floating);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-box-header {
+  padding: 12px 18px;
+  background-color: var(--panel-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--mars-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-heading {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.modal-box-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Tab Bar inside Modal */
+.modal-nav-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+  overflow-x: auto;
+}
+
+.modal-tab-btn {
+  padding: 5px 12px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--trans-fast);
+}
+
+.modal-tab-btn:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
+}
+
+.modal-tab-btn.active {
+  background-color: var(--mars-accent-subtle);
+  border-color: var(--mars-accent);
+  color: var(--mars-accent);
+}
+
+/* --------------------------------------------------------------------------
+   9. Scientific Visualization Containers & Tables
+   -------------------------------------------------------------------------- */
+.chart-card {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chart-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.chart-source-citation {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+}
+
+.svg-chart-container {
+  width: 100%;
+  height: 220px;
+  position: relative;
+}
+
+.svg-chart-container svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Part 5 — NASA Mobility Risk Matrix Table */
+.risk-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+
+.risk-matrix-table th, .risk-matrix-table td {
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.risk-matrix-table th {
+  background-color: rgba(16, 15, 15, 0.8);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.risk-matrix-table td.terrain-header-cell {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: rgba(33, 29, 27, 0.6);
+}
+
+.risk-cell {
+  cursor: pointer;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  transition: transform var(--trans-fast);
+}
+
+.risk-cell:hover {
+  transform: scale(1.05);
+}
+
+.risk-badge-green {
+  background-color: var(--trav-green-bg);
+  color: var(--trav-green);
+  border: 1px solid rgba(32, 166, 106, 0.4);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+
+.risk-badge-yellow {
+  background-color: var(--trav-yellow-bg);
+  color: var(--trav-yellow);
+  border: 1px solid rgba(233, 185, 73, 0.4);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+
+.risk-badge-red {
+  background-color: var(--trav-red-bg);
+  color: var(--trav-red);
+  border: 1px solid rgba(217, 74, 69, 0.4);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+
+/* Part 4 & 6 — NASA Figure 6.2 Legends */
+.classification-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.class-item-card {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.class-item-card:hover {
+  border-color: var(--mars-accent);
+}
+
+.class-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-swatch-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.class-name {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.class-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.class-risk {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--mars-accent);
+  margin-top: 2px;
+}
+
+/* Slope Scale Visualization Bar */
+.slope-bar-strip {
+  display: flex;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.slope-segment {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 34px;
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   cursor: pointer;
-  transition: all var(--transition-fast);
-  outline: none;
-}
-
-.drawer-btn.primary {
-  background: var(--mars-rust);
-  border: 1px solid var(--mars-rust-light);
-  color: #ffffff;
-}
-
-.drawer-btn.primary:hover {
-  background: var(--mars-rust-dark);
-}
-
-.drawer-btn.secondary {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-}
-
-.drawer-btn.secondary:hover {
-  background: var(--bg-hover);
-  color: #ffffff;
-  border-color: var(--border-medium);
 }
 
 /* --------------------------------------------------------------------------
-   9. Small Planetary Status Bar (Pinned to Viewport Bottom)
+   10. Part 8 — Horizontal Interactive Timeline
    -------------------------------------------------------------------------- */
-.status-bar {
+.timeline-track-wrapper {
+  position: relative;
+  padding: 16px 8px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+}
+
+.timeline-line-base {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background-color: var(--border-color);
+  transform: translateY(-50%);
+}
+
+.timeline-milestones-row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.milestone-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.node-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--panel-primary);
+  border: 2px solid var(--border-color);
+  transition: all var(--trans-fast);
+}
+
+.milestone-node:hover .node-dot {
+  border-color: var(--mars-accent);
+  background-color: var(--mars-accent);
+}
+
+.milestone-node.active .node-dot {
+  border-color: #ffffff;
+  background-color: var(--mars-accent);
+  box-shadow: 0 0 8px var(--mars-accent);
+}
+
+.node-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+.node-sub {
+  font-size: 8px;
+  color: var(--text-muted);
+}
+
+.milestone-detail-card {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   11. Part 10 — Appendix A Searchable Dashboard
+   -------------------------------------------------------------------------- */
+.search-control-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 6px 10px;
+}
+
+.appendix-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.data-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.data-stats-table th, .data-stats-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.data-stats-table th {
+  text-align: left;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.data-stats-table tr:hover td {
+  background-color: var(--panel-hover);
+}
+
+/* --------------------------------------------------------------------------
+   12. Bottom Planetary Status Bar & Dynamic Legend
+   -------------------------------------------------------------------------- */
+.command-status-bar {
   height: var(--status-bar-height);
-  background-color: var(--bg-surface);
-  border-top: 1px solid var(--border-subtle);
+  background-color: var(--panel-primary);
+  border-top: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 14px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
   flex-shrink: 0;
-  z-index: 1000;
+  z-index: 500;
 }
 
 .status-left, .status-center, .status-right {
@@ -1403,301 +1504,72 @@ input:checked + .slider:before {
   gap: 8px;
 }
 
-.status-item {
+.status-chip {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
-.status-sep {
-  opacity: 0.25;
+.chip-divider {
+  color: var(--border-color);
 }
 
-.status-label {
-  font-size: 10px;
+.chip-label {
   color: var(--text-muted);
 }
 
-.status-val {
+.chip-val {
   color: var(--text-primary);
-  font-weight: 500;
 }
 
-.status-val.coords {
+.chip-val.coords {
   color: #ffffff;
   font-weight: 600;
 }
 
-.status-val.highlight {
-  color: var(--mars-sand);
+.dynamic-legend-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.status-badge {
-  font-size: 9px;
-  font-weight: 700;
-  padding: 1px 6px;
+.legend-title {
+  color: var(--text-muted);
+}
+
+.legend-val {
+  color: var(--terrain-highlight);
+  font-weight: 600;
+}
+
+.badge-status {
+  padding: 1px 5px;
   border-radius: var(--radius-xs);
+  font-size: 8px;
+  font-weight: 700;
   letter-spacing: 0.5px;
 }
 
-.status-badge.ready {
-  background: var(--status-green-bg);
-  color: var(--status-green);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+.badge-status.ready {
+  background-color: var(--trav-green-bg);
+  color: var(--trav-green);
+  border: 1px solid rgba(32, 166, 106, 0.4);
 }
 
-.status-badge.loading {
-  background: var(--status-amber-bg);
-  color: var(--status-amber);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.status-badge.error {
-  background: var(--status-red-bg);
-  color: var(--status-red);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.status-link {
-  color: var(--mars-rust-light);
+.status-refresh-link {
+  color: var(--mars-accent);
   text-decoration: underline;
   cursor: pointer;
-  margin-left: 4px;
 }
 
 /* --------------------------------------------------------------------------
-   10. Custom Mars Vector Map Markers & Popups
-   -------------------------------------------------------------------------- */
-.mars-marker-beacon {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.marker-pin-outer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--mars-rust);
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 6px var(--mars-rust);
-  transition: transform 0.15s ease;
-}
-
-.marker-ping {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px solid var(--mars-rust);
-  opacity: 0.6;
-  animation: beacon-ping 3s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
-  pointer-events: none;
-}
-
-@keyframes beacon-ping {
-  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
-  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
-}
-
-.mars-marker-beacon:hover .marker-pin-outer {
-  transform: translate(-50%, -50%) scale(1.3);
-  background: var(--mars-rust-light);
-}
-
-/* Leaflet Custom Popup */
-.leaflet-popup-content-wrapper {
-  background: var(--bg-surface-elevated) !important;
-  border: 1px solid var(--border-medium) !important;
-  border-radius: var(--radius-sm) !important;
-  box-shadow: var(--shadow-panel) !important;
-  color: var(--text-primary) !important;
-  padding: 0 !important;
-}
-
-.leaflet-popup-tip {
-  background: var(--bg-surface-elevated) !important;
-  border: 1px solid var(--border-medium) !important;
-}
-
-.leaflet-popup-content {
-  margin: 10px 12px !important;
-  line-height: 1.4 !important;
-}
-
-.popup-category {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  color: var(--mars-sand);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.popup-title {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 2px 0 5px 0;
-}
-
-.popup-details {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-secondary);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: 6px;
-}
-
-.popup-inspect-btn {
-  width: 100%;
-  padding: 4px 0;
-  background: var(--mars-rust-subtle);
-  border: 1px solid var(--mars-rust);
-  border-radius: var(--radius-xs);
-  color: var(--mars-rust-light);
-  font-size: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.popup-inspect-btn:hover {
-  background: var(--mars-rust);
-  color: #ffffff;
-}
-
-/* --------------------------------------------------------------------------
-   11. Modal Dialog (Documentation & Attribution)
-   -------------------------------------------------------------------------- */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--transition-normal);
-}
-
-.modal-backdrop.open {
-  opacity: 1;
-  visibility: visible;
-}
-
-.modal-dialog {
-  width: 500px;
-  max-width: calc(100vw - 32px);
-  max-height: calc(100vh - 40px);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-panel);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header {
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-surface-elevated);
-}
-
-.modal-title {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.modal-title svg {
-  color: var(--mars-rust-light);
-}
-
-.modal-body {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.modal-section-title {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--mars-rust-light);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.shortcuts-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11px;
-}
-
-.shortcuts-table td {
-  padding: 5px 6px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.kbd-badge {
-  display: inline-block;
-  padding: 1px 6px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xs);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--mars-sand);
-}
-
-.attribution-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.attr-item {
-  border-left: 2px solid var(--border-medium);
-  padding-left: 8px;
-}
-
-/* --------------------------------------------------------------------------
-   12. Minimalist Scientific Loading Screen
+   13. Loading Screen
    -------------------------------------------------------------------------- */
 .loading-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background-color: var(--bg-canvas);
+  background-color: var(--bg-main);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1714,151 +1586,115 @@ input:checked + .slider:before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 400px;
+  max-width: 420px;
   padding: 24px;
   text-align: center;
 }
 
 .loading-spinner {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 18px;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 16px;
 }
 
-.spinner-svg {
+.spinner-ring {
   width: 100%;
   height: 100%;
-  animation: spin-loop 1.4s linear infinite;
+  animation: spin-ring 1.3s linear infinite;
 }
 
-@keyframes spin-loop {
+@keyframes spin-ring {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
 .loading-brand {
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 2px;
   color: #ffffff;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .loading-sub {
   font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--mars-rust-light);
-  letter-spacing: 1px;
-  margin-bottom: 16px;
-  min-height: 16px;
+  font-size: 9px;
+  color: var(--mars-accent);
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+  min-height: 15px;
 }
 
-.loading-bar-track {
+.loading-progress-track {
   width: 240px;
   height: 3px;
-  background: var(--border-medium);
+  background-color: var(--panel-secondary);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.loading-bar-fill {
+.loading-progress-bar {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 0%;
-  background: var(--mars-rust);
+  background-color: var(--mars-accent);
   transition: width 0.3s ease;
 }
 
 .loading-log {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-muted);
   max-width: 320px;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .loading-error-box {
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-top: 14px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
-.loading-error-msg {
+.error-msg {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--status-red);
-  background: var(--status-red-bg);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: var(--radius-xs);
-  padding: 6px 10px;
+  color: var(--trav-red);
 }
 
-.retry-action-btn {
-  padding: 6px 14px;
-  background: var(--mars-rust);
-  border: 1px solid var(--mars-rust-light);
+.retry-btn {
+  padding: 5px 12px;
+  background-color: var(--mars-accent);
+  border: 1px solid var(--mars-accent);
   border-radius: var(--radius-xs);
   color: #ffffff;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   cursor: pointer;
-  letter-spacing: 0.5px;
 }
 
 /* --------------------------------------------------------------------------
-   13. Responsive Breakpoints
+   14. Responsive Layout Rules
    -------------------------------------------------------------------------- */
-@media (max-width: 1024px) {
-  .nav-center {
+@media (max-width: 900px) {
+  .command-sidebar {
+    width: 58px;
+  }
+  .command-sidebar .mission-titles,
+  .command-sidebar .nav-label,
+  .command-sidebar .sidebar-footer {
     display: none;
   }
-}
-
-@media (max-width: 768px) {
-  :root {
-    --sidebar-width: 290px;
-    --drawer-width: 100vw;
-  }
-
-  .brand-sub {
+  .top-bar-center {
     display: none;
   }
-
-  .nav-action-btn span {
+  .hide-sm {
     display: none;
-  }
-
-  .nav-action-btn {
-    padding: 0 6px;
-  }
-
-  .hide-mobile {
-    display: none;
-  }
-
-  .app-sidebar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 1100;
-    box-shadow: var(--shadow-floating);
-  }
-
-  .sidebar-close-mobile-btn {
-    display: block;
-  }
-
-  .landmark-drawer {
-    width: 100vw;
-    border-left: none;
-    z-index: 1200;
   }
 }

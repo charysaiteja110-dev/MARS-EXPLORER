@@ -3,373 +3,504 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="MARS EXPLORER PRO — Complete Global Mars Mapping and High-Resolution Satellite & Orbiter Imagery Platform">
-  <meta name="theme-color" content="#06080b">
-  <title>MARS EXPLORER PRO // Complete Global Planetary Mapping & Satellite Platform</title>
+  <meta name="description" content="MARS EXPLORER PRO — Professional Global Mars Mapping & High-Resolution Satellite Imagery Platform">
+  <meta name="theme-color" content="#0d1117">
+  <title>MARS EXPLORER PRO // Planetary Cartography & Satellite Platform</title>
 
-  <!-- Google Fonts: Orbitron / Rajdhani / Space Mono -->
+  <!-- Google Fonts: Inter (Interface) / Rajdhani (Headings) / Space Mono (Telemetry) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <!-- Leaflet CSS (Local Vendor) -->
   <link rel="stylesheet" href="vendor/leaflet.css">
 
-  <!-- Core Stylesheet -->
+  <!-- Core Professional Geospatial Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- ======================================================================
-       Main Planetary Map Viewport (Full Screen)
-       ====================================================================== -->
-  <div id="mars-map" role="region" aria-label="Mars Explorer Pro Global Interactive Map"></div>
+  <!-- Full Application Workspace Layout -->
+  <div class="app-layout">
 
-  <!-- ======================================================================
-       Top Navigation Bar HUD
-       ====================================================================== -->
-  <header class="top-nav" role="banner">
-    <!-- Brand / Mission Identity -->
-    <div class="nav-left">
-      <div class="mission-badge" title="Mars Planetary GIS Cartography Division">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="9"></circle>
-          <path d="M3.6 9h16.8"></path>
-          <path d="M3.6 15h16.8"></path>
-          <path d="M12 3a14 14 0 0 0 0 18"></path>
-          <path d="M12 3a14 14 0 0 1 0 18"></path>
-        </svg>
-      </div>
-      <div class="nav-titles">
-        <div class="brand-title">
-          Mars Explorer Pro
-          <span class="brand-tag">GLOBAL GIS</span>
-        </div>
-        <div class="brand-sub">
-          <span>GLOBAL SURFACE MAP</span>
-          <span>•</span>
-          <span id="active-layer-badge" class="layer-badge">GLOBAL SURFACE</span>
-          <span id="active-source-badge" class="source-badge">OPM v0.2</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Center: Live Telemetry Indicator & Martian Sol Clock -->
-    <div class="nav-center">
-      <div class="live-indicator" title="Active Planetary Tile Stream">
-        <span id="live-dot" class="pulse-dot"></span>
-        <span id="live-status-text">LIVE TILE FEED</span>
-      </div>
-      <div class="mars-clock" title="Coordinated Mars Time & Mars Sol Date">
-        <span id="msd-clock" class="clock-val">MSD 54128.0</span>
-        <span>•</span>
-        <span id="mtc-clock" class="clock-val">00:00:00 MTC</span>
-      </div>
-    </div>
-
-    <!-- Right: Tools, Layers & Selectors -->
-    <div class="nav-right">
-      <!-- Landmark Quick-Jump Selector -->
-      <div class="landmark-select-wrapper" title="Jump to verified Martian landmark">
-        <select id="landmark-select" class="landmark-select" aria-label="Martian Landmarks Quick Jump">
-          <option value="" disabled selected>EXPLORE LANDMARK...</option>
-        </select>
-        <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </div>
-
-      <!-- Toggle Layer Switcher Panel -->
-      <button id="toggle-layers-btn" class="nav-btn" title="Switch Planetary Map & Satellite Layers (Hotkey: L)" aria-label="Map Layers">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-          <polyline points="2 17 12 22 22 17"></polyline>
-          <polyline points="2 12 12 17 22 12"></polyline>
-        </svg>
-        <span>LAYERS</span>
-      </button>
-
-      <!-- Toggle Landmark Markers -->
-      <button id="toggle-markers-btn" class="nav-btn active" title="Toggle Landmark Markers (Hotkey: M)" aria-label="Toggle Landmarks">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-          <circle cx="12" cy="10" r="3"></circle>
-        </svg>
-        <span>MARKERS</span>
-      </button>
-
-      <!-- Toggle Spheroid Distance Measurement Tool -->
-      <button id="toggle-measure-btn" class="nav-btn" title="Measure Great Circle Distance on Mars (Hotkey: D)" aria-label="Measure Distance">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 12h20"></path>
-          <path d="M6 8v8"></path>
-          <path d="M12 6v12"></path>
-          <path d="M18 8v8"></path>
-        </svg>
-        <span>MEASURE</span>
-      </button>
-
-      <!-- Fullscreen Toggle -->
-      <button id="top-fullscreen-btn" class="nav-btn" title="Toggle Fullscreen (Hotkey: F)" aria-label="Fullscreen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <polyline points="9 21 3 21 3 15"></polyline>
-          <line x1="21" y1="3" x2="14" y2="10"></line>
-          <line x1="3" y1="21" x2="10" y2="14"></line>
-        </svg>
-      </button>
-
-      <!-- Settings / Mission Modal -->
-      <button id="open-settings-btn" class="nav-btn" title="Settings & Cartography Info" aria-label="Settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-        </svg>
-      </button>
-    </div>
-  </header>
-
-  <!-- ======================================================================
-       Floating Map Controls HUD (Right Side)
-       ====================================================================== -->
-  <aside class="map-controls-hud" aria-label="Map Navigation Controls">
-    <div class="control-group">
-      <!-- Zoom In -->
-      <button id="btn-zoom-in" class="hud-btn" data-tooltip="Zoom In (+)" aria-label="Zoom In">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-      </button>
-
-      <!-- Current Zoom Level Display -->
-      <div id="zoom-level-badge" class="zoom-indicator" title="Current Zoom Level">LVL 2</div>
-
-      <!-- Zoom Out -->
-      <button id="btn-zoom-out" class="hud-btn" data-tooltip="Zoom Out (-)" aria-label="Zoom Out">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-      </button>
-
-      <div class="hud-divider"></div>
-
-      <!-- Global Map Reset View (fitBounds) -->
-      <button id="btn-reset-view" class="hud-btn" data-tooltip="Global Map Reset (R)" aria-label="Reset Global View">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="22" y1="12" x2="18" y2="12"></line>
-          <line x1="6" y1="12" x2="2" y2="12"></line>
-          <line x1="12" y1="6" x2="12" y2="2"></line>
-          <line x1="12" y1="22" x2="12" y2="18"></line>
-        </svg>
-      </button>
-
-      <!-- Fullscreen Toggle -->
-      <button id="btn-fullscreen" class="hud-btn" data-tooltip="Fullscreen (F)" aria-label="Toggle Fullscreen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <polyline points="9 21 3 21 3 15"></polyline>
-          <line x1="21" y1="3" x2="14" y2="10"></line>
-          <line x1="3" y1="21" x2="10" y2="14"></line>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Compass / North Orientation HUD -->
-    <div class="control-group">
-      <div id="compass-box" class="compass-box" title="Orientation: North Up (Click to Re-center)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 19 21 12 17 5 21 12 2"></polygon>
-        </svg>
-        <span class="north-label">N</span>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ======================================================================
-       Floating Layer Switcher Panel (Section 4 & Section 5)
-       ====================================================================== -->
-  <aside id="layer-switcher-panel" class="layer-switcher-panel" aria-label="Planetary Map Layer Selector">
-    <div class="layer-switcher-header">
-      <div class="layer-switcher-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-          <polyline points="2 17 12 22 22 17"></polyline>
-          <polyline points="2 12 12 17 22 12"></polyline>
-        </svg>
-        Planetary Map Layers
-      </div>
-      <button id="layer-switcher-close-btn" class="drawer-close-btn" aria-label="Close Layer Switcher">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Layer Cards Container -->
-    <div id="layer-cards-container" class="layer-cards-container">
-      <!-- Injected dynamically via controls.js -->
-    </div>
-
-    <!-- Satellite Layer Opacity Slider (Section 5) -->
-    <div id="opacity-control-section" class="opacity-control-section">
-      <div class="opacity-header">
-        <span class="opacity-label">Imagery Transparency</span>
-        <span id="opacity-value-display" class="opacity-val-badge">100%</span>
-      </div>
-      <input id="opacity-slider" type="range" min="0" max="1" step="0.05" value="1" class="opacity-slider-input" aria-label="Satellite Imagery Opacity Slider">
-      <div class="opacity-presets">
-        <button class="opacity-preset-btn" data-opacity="0">0%</button>
-        <button class="opacity-preset-btn" data-opacity="0.25">25%</button>
-        <button class="opacity-preset-btn" data-opacity="0.5">50%</button>
-        <button class="opacity-preset-btn" data-opacity="0.75">75%</button>
-        <button class="opacity-preset-btn active" data-opacity="1.0">100%</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ======================================================================
-       Bottom-Left Planetary Information & Telemetry Glass Panel
-       ====================================================================== -->
-  <aside id="telemetry-panel" class="telemetry-panel" aria-label="Planetary Telemetry">
-    <div id="telemetry-header" class="telemetry-header">
-      <div class="telemetry-header-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-        </svg>
-        Scientific Telemetry
-      </div>
-      <button class="collapse-btn" aria-label="Toggle Telemetry Panel">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </button>
-    </div>
-
-    <div class="telemetry-body">
-      <div class="telemetry-row">
-        <span class="telemetry-label">Planet</span>
-        <span class="telemetry-value highlight">Mars (Sol IV) • R: 3,389.5 km</span>
-      </div>
-
-      <div class="telemetry-row">
-        <span class="telemetry-label">Active Layer</span>
-        <span id="telemetry-layer-val" class="telemetry-value" style="color: var(--mars-sand);">Global Surface</span>
-      </div>
-
-      <div class="telemetry-row">
-        <span class="telemetry-label">Data Source</span>
-        <span id="telemetry-source-val" class="telemetry-value" style="font-size: 10px;">OpenPlanetaryMap (MOLA/USGS)</span>
-      </div>
-
-      <div class="telemetry-row">
-        <span class="telemetry-label">Cursor Coords</span>
-        <span id="cursor-coords" class="telemetry-value coords">0.0000° N, 0.0000° E</span>
-      </div>
-
-      <div class="telemetry-row">
-        <span class="telemetry-label">Map Center</span>
-        <span id="center-coords" class="telemetry-value coords">0.0000° N, 0.0000° E</span>
-      </div>
-
-      <div class="telemetry-row">
-        <span class="telemetry-label">Zoom Scale</span>
-        <span id="zoom-readout" class="telemetry-value">Level 2.0 (Planetary)</span>
-      </div>
-
-      <div class="telemetry-row">
-        <span class="telemetry-label">Tile Stream</span>
-        <span id="tile-status-badge" class="status-badge ready">STREAMING NOMINAL</span>
-      </div>
-
-      <div class="telemetry-footer">
-        <span title="Extreme polar regions beyond 85° clipped by conformal cylindrical projection">Projection: EPSG:3857 (Polar Limit: ±85.05°)</span>
-        <a id="retry-tile-link" href="#" class="retry-link">Refresh Layer</a>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ======================================================================
-       Landmark Detail Inspector Drawer
-       ====================================================================== -->
-  <aside id="landmark-drawer" class="landmark-drawer" aria-label="Martian Landmark Telemetry">
-    <div class="drawer-header">
-      <div id="drawer-category" class="drawer-category">SHIELD VOLCANO</div>
-      <h2 id="drawer-title" class="drawer-title">Olympus Mons</h2>
-      <button id="drawer-close-btn" class="drawer-close-btn" aria-label="Close Landmark Drawer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <div class="drawer-content">
-      <div id="drawer-stats-grid" class="landmark-stats-grid">
-        <!-- Dynamically injected stat cards -->
-      </div>
-
-      <p id="drawer-summary" class="landmark-desc">
-        Detailed topological analysis and scientific mission data.
-      </p>
-
-      <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); border-left: 2px solid var(--mars-rust); padding-left: 10px;">
-        <strong style="color: var(--mars-sand);">Exploration Archive:</strong>
-        <span id="drawer-mission">NASA Planetary Data System</span>
-      </div>
-
-      <div class="landmark-actions">
-        <button id="drawer-fly-btn" class="action-btn primary">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <circle cx="12" cy="12" r="3"></circle>
+    <!-- ====================================================================
+         1. Compact Top Navigation & Command Bar
+         ==================================================================== -->
+    <header class="top-nav" role="banner">
+      <div class="nav-left">
+        <!-- Sidebar Toggle Button -->
+        <button id="btn-toggle-sidebar" class="sidebar-toggle-btn active" title="Toggle Sidebar (Hotkey: L)" aria-label="Toggle Sidebar">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+            <path d="M15 9l-3 3 3 3"></path>
           </svg>
-          CENTER ON TARGET
         </button>
-        <button id="drawer-copy-btn" class="action-btn secondary">
-          COPY COORDS
+
+        <!-- Brand Identity -->
+        <div class="brand-group">
+          <div class="brand-logo" title="Mars Planetary GIS Cartography Division">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3.6 9h16.8"></path>
+              <path d="M3.6 15h16.8"></path>
+              <path d="M12 3a14 14 0 0 0 0 18"></path>
+              <path d="M12 3a14 14 0 0 1 0 18"></path>
+            </svg>
+          </div>
+          <div class="brand-titles">
+            <div class="brand-name">
+              Mars Explorer Pro
+              <span class="brand-badge">GIS v2.4</span>
+            </div>
+            <div class="brand-sub">
+              <span>PLANETARY RECONNAISSANCE</span>
+              <span class="sub-sep">•</span>
+              <span id="active-layer-badge" class="layer-badge">GLOBAL SURFACE</span>
+              <span id="active-source-badge" class="source-badge">OPM v0.2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: Coordinated Mars Time & Live Status -->
+      <div class="nav-center">
+        <div class="telemetry-pill" title="Coordinated Mars Time (MTC) & Mars Sol Date (MSD)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span id="msd-clock" class="pill-value">MSD 54128.0</span>
+          <span class="pill-divider">/</span>
+          <span id="mtc-clock" class="pill-value">00:00:00 MTC</span>
+        </div>
+
+        <div class="telemetry-pill live" title="Planetary Tile Data Feed">
+          <span id="live-dot" class="status-indicator-dot"></span>
+          <span id="live-status-text" class="pill-value">STREAM NOMINAL</span>
+        </div>
+      </div>
+
+      <!-- Right: Action Controls & Landmark Quick Jump -->
+      <div class="nav-right">
+        <!-- Landmark Quick Jump Dropdown -->
+        <div class="quick-jump-wrapper" title="Jump to Martian landmark">
+          <select id="landmark-select" class="nav-select" aria-label="Martian Landmarks Quick Jump">
+            <option value="" disabled selected>Select Landmark...</option>
+          </select>
+          <svg class="select-chevron" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+
+        <!-- Layers Toggle -->
+        <button id="toggle-layers-btn" class="nav-action-btn active" title="Switch Map Layers (Hotkey: L)" aria-label="Map Layers">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <span>Layers</span>
+        </button>
+
+        <!-- Toggle Markers -->
+        <button id="toggle-markers-btn" class="nav-action-btn active" title="Toggle Landmark Markers (Hotkey: M)" aria-label="Toggle Landmarks">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span>Markers</span>
+        </button>
+
+        <!-- Geodesic Measurement Tool -->
+        <button id="toggle-measure-btn" class="nav-action-btn" title="Measure Distance on Mars Spheroid (Hotkey: D)" aria-label="Measure Distance">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 12h20"></path>
+            <path d="M6 8v8"></path>
+            <path d="M12 6v12"></path>
+            <path d="M18 8v8"></path>
+          </svg>
+          <span>Measure</span>
+        </button>
+
+        <!-- Fullscreen -->
+        <button id="top-fullscreen-btn" class="nav-action-btn icon-only" title="Toggle Fullscreen (Hotkey: F)" aria-label="Toggle Fullscreen">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+        </button>
+
+        <!-- Settings & Documentation -->
+        <button id="open-settings-btn" class="nav-action-btn icon-only" title="Cartography & Attribution Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
         </button>
       </div>
-    </div>
-  </aside>
+    </header>
 
-  <!-- ======================================================================
-       Spheroid Distance Measure Tool HUD
-       ====================================================================== -->
-  <div id="measure-hud" class="measure-hud">
-    <div class="measure-header">
-      <span>Mars Geodesic Distance</span>
-      <span style="font-size: 9px; color: var(--mars-sand);">R = 3,389.5 KM</span>
+    <!-- ====================================================================
+         2. Main Application Area: Sidebar + Map Workspace + Inspector
+         ==================================================================== -->
+    <div class="app-main">
+
+      <!-- Collapsible Left Exploration Sidebar -->
+      <aside id="app-sidebar" class="app-sidebar" aria-label="Planetary Exploration Controls">
+        <div class="sidebar-header">
+          <span class="sidebar-title">PLANETARY EXPLORER</span>
+          <button id="sidebar-close-btn" class="sidebar-close-mobile-btn" aria-label="Close Sidebar">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Segmented Tab Navigation -->
+        <nav class="sidebar-tabs" role="tablist">
+          <button class="sidebar-tab-btn active" data-tab="tab-layers" role="tab" aria-selected="true">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            Layers
+          </button>
+          <button class="sidebar-tab-btn" data-tab="tab-landmarks" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            Landmarks
+          </button>
+          <button class="sidebar-tab-btn" data-tab="tab-tools" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            Tools
+          </button>
+        </nav>
+
+        <!-- Tab 1: Planetary Map Layers -->
+        <div id="tab-layers" class="sidebar-tab-content active" role="tabpanel">
+          <div class="sidebar-section-header">
+            <span class="section-title">SELECTABLE BASEMAPS</span>
+            <span class="section-hint">5 Datasets</span>
+          </div>
+
+          <!-- Layer Cards Container (Rendered dynamically) -->
+          <div id="layer-cards-container" class="layer-cards-container"></div>
+
+          <!-- Compact Opacity Slider Section -->
+          <div id="opacity-control-section" class="opacity-control-section">
+            <div class="opacity-header">
+              <span class="opacity-label">Active Layer Opacity</span>
+              <span id="opacity-value-display" class="opacity-val-badge">100%</span>
+            </div>
+            <input id="opacity-slider" type="range" min="0" max="1" step="0.05" value="1" class="opacity-slider-input" aria-label="Layer Opacity Slider">
+            <div class="opacity-presets">
+              <button class="opacity-preset-btn" data-opacity="0">0%</button>
+              <button class="opacity-preset-btn" data-opacity="0.25">25%</button>
+              <button class="opacity-preset-btn" data-opacity="0.5">50%</button>
+              <button class="opacity-preset-btn" data-opacity="0.75">75%</button>
+              <button class="opacity-preset-btn active" data-opacity="1.0">100%</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Martian Landmarks Directory -->
+        <div id="tab-landmarks" class="sidebar-tab-content" role="tabpanel">
+          <div class="landmark-search-box">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input id="landmark-search-input" type="text" class="search-input" placeholder="Filter landmarks, craters, rovers..." aria-label="Search Martian Landmarks">
+          </div>
+
+          <!-- Category Filter Pills -->
+          <div class="category-filters">
+            <button class="filter-chip active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="volcano">Volcanoes</button>
+            <button class="filter-chip" data-filter="crater">Craters</button>
+            <button class="filter-chip" data-filter="basin">Basins</button>
+            <button class="filter-chip" data-filter="rover">Rovers</button>
+          </div>
+
+          <!-- Landmark Items List -->
+          <div id="landmark-list-container" class="landmark-list-container"></div>
+        </div>
+
+        <!-- Tab 3: Geospatial Tools & Settings -->
+        <div id="tab-tools" class="sidebar-tab-content" role="tabpanel">
+          <div class="sidebar-section-header">
+            <span class="section-title">CARTOGRAPHIC OVERLAYS</span>
+          </div>
+
+          <div class="tools-toggle-list">
+            <div class="tool-toggle-item">
+              <div class="toggle-info">
+                <span class="toggle-name">Landmark Markers</span>
+                <span class="toggle-desc">Show verified exploration beacons</span>
+              </div>
+              <label class="switch">
+                <input id="setting-toggle-markers" type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="tool-toggle-item">
+              <div class="toggle-info">
+                <span class="toggle-name">Coordinate Graticule</span>
+                <span class="toggle-desc">Render planetary 30° lat / 45° lon grid lines</span>
+              </div>
+              <label class="switch">
+                <input id="setting-toggle-graticule" type="checkbox">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="sidebar-section-header" style="margin-top: 18px;">
+            <span class="section-title">PLANETARY GEODESIC TOOLS</span>
+          </div>
+
+          <div class="sidebar-actions">
+            <button id="btn-sidebar-measure" class="sidebar-action-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 12h20"></path>
+                <path d="M6 8v8"></path>
+                <path d="M12 6v12"></path>
+                <path d="M18 8v8"></path>
+              </svg>
+              Activate Mars Distance Measure Tool
+            </button>
+
+            <button id="btn-sidebar-reset" class="sidebar-action-btn secondary">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="22" y1="12" x2="18" y2="12"></line>
+                <line x1="6" y1="12" x2="2" y2="12"></line>
+                <line x1="12" y1="6" x2="12" y2="2"></line>
+                <line x1="12" y1="22" x2="12" y2="18"></line>
+              </svg>
+              Reset to Global Extent (R)
+            </button>
+          </div>
+
+          <div class="sidebar-section-header" style="margin-top: 18px;">
+            <span class="section-title">MARS GEODETIC CONSTANTS</span>
+          </div>
+
+          <div class="constants-card">
+            <div class="const-row">
+              <span class="const-label">Datum</span>
+              <span class="const-val">IAU / USGS 2000 Areoid</span>
+            </div>
+            <div class="const-row">
+              <span class="const-label">Volumetric Mean Radius</span>
+              <span class="const-val">3,389.5 km</span>
+            </div>
+            <div class="const-row">
+              <span class="const-label">Equatorial Radius</span>
+              <span class="const-val">3,396.2 km</span>
+            </div>
+            <div class="const-row">
+              <span class="const-label">Surface Gravity</span>
+              <span class="const-val">3.72 m/s² (0.379 g)</span>
+            </div>
+            <div class="const-row">
+              <span class="const-label">Sol Duration</span>
+              <span class="const-val">24h 39m 35.244s</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Central Map Workspace -->
+      <main class="map-workspace">
+        <div id="mars-map" role="region" aria-label="Mars Interactive Global Map"></div>
+
+        <!-- Floating Map Navigation HUD (Top-Right of Map) -->
+        <div class="map-controls-hud" aria-label="Map Navigation Controls">
+          <div class="control-group">
+            <button id="btn-zoom-in" class="hud-btn" data-tooltip="Zoom In (+)" aria-label="Zoom In">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+
+            <div id="zoom-level-badge" class="zoom-indicator" title="Current Zoom Level">LVL 2</div>
+
+            <button id="btn-zoom-out" class="hud-btn" data-tooltip="Zoom Out (-)" aria-label="Zoom Out">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+
+            <div class="hud-divider"></div>
+
+            <button id="btn-reset-view" class="hud-btn" data-tooltip="Global Reset (R)" aria-label="Reset Global View">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="22" y1="12" x2="18" y2="12"></line>
+                <line x1="6" y1="12" x2="2" y2="12"></line>
+                <line x1="12" y1="6" x2="12" y2="2"></line>
+                <line x1="12" y1="22" x2="12" y2="18"></line>
+              </svg>
+            </button>
+
+            <button id="btn-fullscreen" class="hud-btn" data-tooltip="Fullscreen (F)" aria-label="Toggle Fullscreen">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="control-group">
+            <div id="compass-box" class="compass-box" title="Orientation: North Up (Click to Re-center)">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 19 21 12 17 5 21 12 2"></polygon>
+              </svg>
+              <span class="north-label">N</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Spheroid Distance Measurement HUD (Bottom-Right of Map) -->
+        <div id="measure-hud" class="measure-hud" role="region" aria-label="Geodesic Distance Measure">
+          <div class="measure-header">
+            <span class="measure-title">Mars Spheroid Distance</span>
+            <span class="measure-sub">R = 3,389.5 km</span>
+          </div>
+          <div id="measure-distance-val" class="measure-result">
+            0.0 <span class="measure-unit">KM</span>
+          </div>
+          <div id="measure-points-hint" class="measure-hint">
+            CLICK 1ST POINT ON MARS SURFACE
+          </div>
+          <div class="measure-actions">
+            <button id="measure-clear-btn" class="measure-btn">Clear</button>
+            <button id="measure-close-btn" class="measure-btn primary">Done</button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Contextual Landmark Telemetry Drawer (Slides in from Right) -->
+      <aside id="landmark-drawer" class="landmark-drawer" aria-label="Martian Landmark Telemetry">
+        <div class="drawer-header">
+          <div class="drawer-title-group">
+            <div id="drawer-category" class="drawer-category">SHIELD VOLCANO</div>
+            <h2 id="drawer-title" class="drawer-title">Olympus Mons</h2>
+          </div>
+          <button id="drawer-close-btn" class="drawer-close-btn" aria-label="Close Landmark Details">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="drawer-content">
+          <!-- Dynamically populated scientific stats grid -->
+          <div id="drawer-stats-grid" class="landmark-stats-grid"></div>
+
+          <div class="drawer-section">
+            <div class="section-label">GEOLOGICAL PROFILE</div>
+            <p id="drawer-summary" class="landmark-desc">
+              Detailed topological analysis and scientific mission data.
+            </p>
+          </div>
+
+          <div class="drawer-section">
+            <div class="section-label">MISSION CONTEXT</div>
+            <div id="drawer-mission" class="mission-text">NASA Planetary Data System</div>
+          </div>
+
+          <div class="landmark-actions">
+            <button id="drawer-fly-btn" class="drawer-btn primary">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              CENTER ON TARGET
+            </button>
+            <button id="drawer-copy-btn" class="drawer-btn secondary">
+              COPY COORDS
+            </button>
+          </div>
+        </div>
+      </aside>
+
     </div>
-    <div id="measure-distance-val" class="measure-result">
-      0.0 <span class="measure-unit">KM</span>
-    </div>
-    <div id="measure-points-hint" class="measure-hint">
-      CLICK 1ST POINT ON MARS SURFACE
-    </div>
-    <div class="measure-actions">
-      <button id="measure-clear-btn" class="measure-btn">CLEAR</button>
-      <button id="measure-close-btn" class="measure-btn">DONE</button>
-    </div>
+
+    <!-- ====================================================================
+         3. Small Planetary Status Bar (Pinned to Viewport Bottom)
+         ==================================================================== -->
+    <footer id="status-bar" class="status-bar" role="contentinfo">
+      <div class="status-left">
+        <div class="status-item">
+          <span class="status-label">CURSOR:</span>
+          <span id="cursor-coords" class="status-val coords">0.0000° N, 0.0000° E</span>
+        </div>
+        <div class="status-sep">|</div>
+        <div class="status-item">
+          <span class="status-label">CENTER:</span>
+          <span id="center-coords" class="status-val coords">0.0000° N, 0.0000° E</span>
+        </div>
+      </div>
+
+      <div class="status-center">
+        <div class="status-item">
+          <span class="status-label">ZOOM:</span>
+          <span id="zoom-readout" class="status-val">Level 2.0 (Planetary)</span>
+        </div>
+        <div class="status-sep">|</div>
+        <div class="status-item hide-mobile">
+          <span class="status-label">PROJECTION:</span>
+          <span class="status-val">EPSG:3857 (±85.05° Polar Limit)</span>
+        </div>
+      </div>
+
+      <div class="status-right">
+        <div class="status-item">
+          <span class="status-label">LAYER:</span>
+          <span id="telemetry-layer-val" class="status-val highlight">Global Surface</span>
+        </div>
+        <div class="status-sep">|</div>
+        <div class="status-item">
+          <span id="tile-status-badge" class="status-badge ready">STREAMING NOMINAL</span>
+          <a id="retry-tile-link" href="#" class="status-link">Refresh</a>
+        </div>
+      </div>
+    </footer>
+
   </div>
 
-  <!-- ======================================================================
-       Settings & Mission Telemetry Modal
-       ====================================================================== -->
+  <!-- ====================================================================
+       4. Documentation & Settings Modal
+       ==================================================================== -->
   <div id="settings-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settings-dialog-title">
     <div class="modal-dialog">
       <div class="modal-header">
         <div id="settings-dialog-title" class="modal-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
-          Cartography Configuration
+          Cartography Specifications & Keyboard Navigation
         </div>
         <button id="modal-close-btn" class="drawer-close-btn" aria-label="Close Settings">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -378,91 +509,72 @@
 
       <div class="modal-body">
         <div>
-          <div class="settings-section-title">Overlay Elements</div>
-          <div class="settings-list">
-            <div class="setting-item">
-              <div class="setting-info">
-                <span class="setting-name">Landmark Markers</span>
-                <span class="setting-desc">Display verified Martian geographic locations & rovers</span>
-              </div>
-              <label class="switch">
-                <input id="setting-toggle-markers" type="checkbox" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="setting-item">
-              <div class="setting-info">
-                <span class="setting-name">Latitude / Longitude Graticule</span>
-                <span class="setting-desc">Render planetary coordinate grid lines</span>
-              </div>
-              <label class="switch">
-                <input id="setting-toggle-graticule" type="checkbox">
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="settings-section-title">Keyboard Navigation</div>
+          <div class="modal-section-title">KEYBOARD SHORTCUTS</div>
           <table class="shortcuts-table">
             <tbody>
               <tr><td><span class="kbd-badge">+</span> / <span class="kbd-badge">-</span></td><td>Zoom In / Out</td></tr>
               <tr><td><span class="kbd-badge">R</span> / <span class="kbd-badge">H</span></td><td>Reset Global View (fitBounds)</td></tr>
-              <tr><td><span class="kbd-badge">L</span></td><td>Toggle Layer Switcher Panel</td></tr>
-              <tr><td><span class="kbd-badge">F</span></td><td>Toggle Fullscreen Mode</td></tr>
+              <tr><td><span class="kbd-badge">L</span></td><td>Toggle Left Sidebar</td></tr>
               <tr><td><span class="kbd-badge">M</span></td><td>Toggle Landmark Markers</td></tr>
-              <tr><td><span class="kbd-badge">D</span></td><td>Toggle Mars Distance Measure Tool</td></tr>
-              <tr><td><span class="kbd-badge">ESC</span></td><td>Close Modals & Drawers</td></tr>
+              <tr><td><span class="kbd-badge">D</span></td><td>Toggle Mars Geodesic Distance Tool</td></tr>
+              <tr><td><span class="kbd-badge">F</span></td><td>Toggle Fullscreen Mode</td></tr>
+              <tr><td><span class="kbd-badge">ESC</span></td><td>Close Modals & Detail Drawers</td></tr>
             </tbody>
           </table>
         </div>
 
-        <div>
-          <div class="settings-section-title">Scientific Attribution & Datasets</div>
-          <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.6;">
-            <strong>A. Global Surface:</strong> OpenPlanetaryMap (OPM) Mars Basemap v0.2 under CC-BY-4.0.<br>
-            <strong>B. Satellite Imagery:</strong> Caltech Global CTX Mosaic of Mars (V01) by Bruce Murray Laboratory for Planetary Visualization (5.0 m/px, MRO Context Camera, NASA/JPL/MSSS/Esri Astro).<br>
-            <strong>C. Elevation:</strong> NASA / USGS Mars Orbiter Laser Altimeter (MOLA) Color Shaded Topography.<br>
-            <strong>D. Hillshade:</strong> NASA / USGS MOLA &amp; ESA Mars Express HRSC Blended Shaded Relief (200 m/px).<br>
-            <strong>E. Viking Imagery:</strong> NASA / USGS Mars Digital Image Model (MDIM 2.1) Color Mosaic.
+        <div style="margin-top: 16px;">
+          <div class="modal-section-title">SCIENTIFIC DATASETS & ATTRIBUTION</div>
+          <div class="attribution-list">
+            <div class="attr-item">
+              <strong>A. Global Surface Basemap:</strong> OpenPlanetaryMap (OPM) Mars Basemap v0.2 under CC-BY-4.0. Carto / USGS Astrogeology / NASA PDS.
+            </div>
+            <div class="attr-item">
+              <strong>B. Orbital Satellite Imagery:</strong> Caltech Global CTX Mosaic of Mars (V01) by Bruce Murray Laboratory for Planetary Visualization (~5.0 m/px, MRO Context Camera, NASA/JPL/MSSS/Esri Astro).
+            </div>
+            <div class="attr-item">
+              <strong>C. Color Topography:</strong> NASA / USGS Mars Orbiter Laser Altimeter (MOLA) Color Shaded Relief (463 m/px, 128 ppd).
+            </div>
+            <div class="attr-item">
+              <strong>D. Shaded Hillshade Relief:</strong> NASA / USGS MOLA &amp; ESA Mars Express HRSC Blended Shaded Relief (200 m/px).
+            </div>
+            <div class="attr-item">
+              <strong>E. Viking Photomosaic:</strong> NASA / USGS Mars Digital Image Model (MDIM 2.1) Color Mosaic.
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ======================================================================
-       Professional Mission Loading Experience Overlay
-       ====================================================================== -->
+  <!-- ====================================================================
+       5. Mission Loading & Initialization Experience
+       ==================================================================== -->
   <div id="loading-overlay" class="loading-overlay" role="alert" aria-busy="true" aria-label="Initializing Mars Global Exploration System">
-    <div class="loading-content">
-      <!-- High-Tech Orbital Radar Scanner -->
-      <div class="orbital-scanner">
-        <div class="orbital-ring"></div>
-        <div class="orbital-ring inner"></div>
-        <div class="mars-core"></div>
-        <div class="scan-sweep"></div>
+    <div class="loading-card">
+      <div class="loading-spinner">
+        <svg viewBox="0 0 50 50" class="spinner-svg">
+          <circle cx="25" cy="25" r="20" fill="none" stroke="rgba(217, 83, 47, 0.2)" stroke-width="3"></circle>
+          <circle cx="25" cy="25" r="20" fill="none" stroke="#d9532f" stroke-width="3" stroke-dasharray="80" stroke-dashoffset="60" stroke-linecap="round"></circle>
+        </svg>
       </div>
 
-      <h1 class="loading-title">INITIALIZING MARS GLOBAL EXPLORATION SYSTEM...</h1>
-      <div id="loading-subtitle" class="loading-subtitle">MOUNTING PLANETARY CARTOGRAPHY &amp; SATELLITE ENGINE...</div>
+      <div class="loading-brand">MARS EXPLORER PRO</div>
+      <div id="loading-subtitle" class="loading-sub">MOUNTING PLANETARY CARTOGRAPHY &amp; SATELLITE ENGINE...</div>
 
-      <div class="loading-progress-bar">
-        <div id="loading-progress-fill" class="loading-progress-fill"></div>
+      <div class="loading-bar-track">
+        <div id="loading-progress-fill" class="loading-bar-fill"></div>
       </div>
 
-      <div id="loading-telemetry-log" class="loading-telemetry-log">
+      <div id="loading-telemetry-log" class="loading-log">
         <div>&gt; Bootstrapping planetary cartography engine...</div>
       </div>
 
-      <!-- Error Fallback Box if Tile Service Fails -->
       <div id="loading-error-box" class="loading-error-box">
         <div id="loading-error-msg" class="loading-error-msg">
           Connection to planetary tile service timed out or degraded.
         </div>
-        <button id="retry-init-btn" class="retry-btn">RETRY CONNECTION</button>
+        <button id="retry-init-btn" class="retry-action-btn">RETRY CONNECTION</button>
       </div>
     </div>
   </div>

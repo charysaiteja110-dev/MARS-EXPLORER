@@ -248,6 +248,25 @@
         <!-- Main Planetary Leaflet Map -->
         <div id="mars-map" role="region" aria-label="Mars Interactive Global Surface Map"></div>
 
+        <!-- In-Map Telemetry Buffering Screen Overlay -->
+        <div id="map-buffering-overlay" class="map-buffering-overlay" role="status" aria-live="polite" aria-label="Buffering Mars Telemetry">
+          <div class="buffering-card">
+            <div class="buffering-spinner">
+              <svg viewBox="0 0 40 40" class="spinner-svg">
+                <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(216, 121, 50, 0.2)" stroke-width="3"></circle>
+                <circle cx="20" cy="20" r="16" fill="none" stroke="#D87932" stroke-width="3" stroke-dasharray="70" stroke-dashoffset="40" stroke-linecap="round"></circle>
+              </svg>
+            </div>
+            <div class="buffering-info">
+              <div class="buffering-title">STREAMING PLANETARY TELEMETRY</div>
+              <div id="buffering-subtitle" class="buffering-sub">BUFFERING HIGH-RESOLUTION SURFACE TILES...</div>
+            </div>
+            <div class="buffering-track">
+              <div class="buffering-bar"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- Floating Map Navigation HUD (Top-Right of Map) -->
         <div class="map-nav-hud" aria-label="Map Navigation Controls">
           <button id="btn-zoom-in" class="map-hud-btn" data-tooltip="Zoom In (+)" aria-label="Zoom In">

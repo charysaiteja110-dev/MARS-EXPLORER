@@ -96,6 +96,10 @@
         btnTogglePolygonsHud: document.getElementById('btn-toggle-polygons-hud'),
         btnToggleLabelsHud: document.getElementById('btn-toggle-labels-hud'),
 
+        // Map Buffering Overlay
+        mapBufferingOverlay: document.getElementById('map-buffering-overlay'),
+        bufferingSubtitle: document.getElementById('buffering-subtitle'),
+
         // Loading Overlay
         loadingOverlay: document.getElementById('loading-overlay'),
         loadingProgressFill: document.getElementById('loading-progress-fill'),
@@ -1398,7 +1402,7 @@
     },
 
     /**
-     * Update Status Bar Telemetry
+     * Update Status Bar Telemetry & Map Buffering Overlay
      */
     setTileStatus: function (status, text) {
       if (this.dom.tileStatusBadge) {
@@ -1410,6 +1414,45 @@
       }
       if (this.dom.liveStatusText) {
         this.dom.liveStatusText.textContent = (status === 'error') ? 'NETWORK DEGRADED' : (status === 'loading') ? 'BUFFERING' : 'STREAMING NOMINAL';
+      }
+
+      // Display In-Map Loading / Buffering Screen
+      if (status === 'loading') {
+        this.showBuffering(text);
+      } else if (status === 'ready') {
+        this.hideBuffering();
+      } else if (status === 'error') {
+        this.hideBuffering();
+      }
+    },
+
+    /**
+     * Show in-map telemetry buffering screen
+     */
+    showBuffering: function (text) {
+      if (!this.dom.mapBufferingOverlay) return;
+      if (this.dom.bufferingSubtitle && text) {
+        this.dom.bufferingSubtitle.textContent = text;
+      }
+      this.dom.mapBufferingOverlay.classList.add('visible');
+
+      // Safety timeout: automatically dismiss after 2.8s even if network is degraded
+      if (this.bufferingTimer) clearTimeout(this.bufferingTimer);
+      this.bufferingTimer = setTimeout(() => {
+        this.hideBuffering();
+      }, 2800);
+    },
+
+    /**
+     * Hide in-map telemetry buffering screen
+     */
+    hideBuffering: function () {
+      if (this.bufferingTimer) {
+        clearTimeout(this.bufferingTimer);
+        this.bufferingTimer = null;
+      }
+      if (this.dom.mapBufferingOverlay) {
+        this.dom.mapBufferingOverlay.classList.remove('visible');
       }
     },
 

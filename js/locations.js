@@ -3,6 +3,7 @@
  * MARS EXPLORER COMMAND CENTER — Verified Martian Landmarks & Scientific Locations
  * Module: locations.js
  * Integrated NASA JPL D-92756 Terrain & Mobility Risk Classification
+ * Hierarchical Adaptive Cartographic Labels
  * ============================================================================
  */
 
@@ -16,6 +17,7 @@
       name: 'Olympus Mons',
       category: 'Shield Volcano',
       shortTag: 'Shield Volcano • 21.9 km',
+      tier: 'primary',
       nasaClass: 'Bedrock & Scarp',
       mobilityRisk: 'Lower Risk (Caldera) / High Risk (Scarp)',
       slopeGrade: '5° Flanks / >25° Scarp Wall',
@@ -37,7 +39,8 @@
       id: 'valles-marineris',
       name: 'Valles Marineris',
       category: 'Canyon System / Chasma',
-      shortTag: 'Grand Canyon of Mars • 4,000 km',
+      shortTag: 'Grand Canyon • 4,000 km',
+      tier: 'primary',
       nasaClass: 'Soil w/ Clasts & Scarps',
       mobilityRisk: 'High Risk (Walls) / Caution (Floor)',
       slopeGrade: '12°–16° Floor Scree / >20° Scarps',
@@ -59,7 +62,8 @@
       id: 'jezero-crater',
       name: 'Jezero Crater',
       category: 'Ancient River Delta & Lake',
-      shortTag: 'Perseverance Rover • Lake Delta',
+      shortTag: 'Perseverance • Ancient Delta',
+      tier: 'primary',
       nasaClass: 'Outcrop (Layered Delta)',
       mobilityRisk: 'Lower Risk (Trafficable)',
       slopeGrade: '0°–4° Flat / 4°–8° Fan Edge',
@@ -81,7 +85,8 @@
       id: 'gale-crater',
       name: 'Gale Crater',
       category: 'Impact Crater & Lakebed',
-      shortTag: 'Curiosity Rover • Mt Sharp',
+      shortTag: 'Curiosity • Mount Sharp',
+      tier: 'primary',
       nasaClass: 'Soil over Bedrock & Dunes',
       mobilityRisk: 'Lower Risk (Bedrock) / High Risk (Dunes)',
       slopeGrade: '0°–8° Lower Mount Sharp / 12° Dunes',
@@ -104,6 +109,7 @@
       name: 'Gusev Crater (Columbia Memorial)',
       category: 'Paleo-Lake Impact Basin',
       shortTag: 'Spirit Landing Site • 7,730 m',
+      tier: 'primary',
       nasaClass: 'Soil over Bedrock (Basalt Plains)',
       mobilityRisk: 'Lower Risk (Trafficable)',
       slopeGrade: '0°–4° Nominal Flat Plains',
@@ -125,7 +131,8 @@
       id: 'home-plate',
       name: 'Home Plate (Gusev Crater)',
       category: 'Volcaniclastic Plateau',
-      shortTag: 'Home Plate • Hydrothermal Silica',
+      shortTag: 'Home Plate • Pure Silica',
+      tier: 'detail',
       nasaClass: 'Outcrop (Ash Layers)',
       mobilityRisk: 'Lower Risk (Trafficable)',
       slopeGrade: '0°–4° Plateau Surface',
@@ -147,7 +154,8 @@
       id: 'troy-embedding',
       name: 'Troy (Spirit Embedding Site)',
       category: 'Historical Rover Case Study',
-      shortTag: 'Troy Trap • Concealed Sulfate Sands',
+      shortTag: 'Troy Trap • Sulfate Sand',
+      tier: 'detail',
       nasaClass: 'Soil w/ Ripple Morphology',
       mobilityRisk: 'High Risk (Impassable)',
       slopeGrade: '~12° Southward Descent Tilt',
@@ -169,7 +177,8 @@
       id: 'meridiani-planum',
       name: 'Meridiani Planum',
       category: 'Sedimentary Plain',
-      shortTag: 'Opportunity Rover • Hematite Plain',
+      shortTag: 'Opportunity • Hematite Plain',
+      tier: 'primary',
       nasaClass: 'Soil with No Rocks',
       mobilityRisk: 'Caution (Moderate Risk)',
       slopeGrade: '0°–4° Flat Plains / Ripple Swales',
@@ -192,6 +201,7 @@
       name: 'Victoria Crater',
       category: 'Impact Crater & Cliffs',
       shortTag: 'Opportunity • 750 m Crater',
+      tier: 'detail',
       nasaClass: 'Outcrop & Cliff Scarps',
       mobilityRisk: 'Lower Risk (Duck Bay) / High Risk (Walls)',
       slopeGrade: '12°–15° Ingress Ramp / >25° Cliffs',
@@ -214,6 +224,7 @@
       name: 'Elysium Mons',
       category: 'Shield Volcano',
       shortTag: 'Shield Volcano • 14.1 km',
+      tier: 'primary',
       nasaClass: 'Bedrock',
       mobilityRisk: 'Lower Risk (Flanks)',
       slopeGrade: '0°–8° Lava Flow Plains',
@@ -236,6 +247,7 @@
       name: 'Utopia Planitia',
       category: 'Vast Northern Plains',
       shortTag: 'Viking 2 & Zhurong Rover',
+      tier: 'primary',
       nasaClass: 'Soil w/ Embedded Rock Clasts',
       mobilityRisk: 'Caution (Moderate Risk)',
       slopeGrade: '0°–4° Flat Periglacial Plain',
@@ -258,6 +270,7 @@
       name: 'Chryse Planitia',
       category: 'Outflow Flood Plain',
       shortTag: 'Viking 1 Lander (1976)',
+      tier: 'primary',
       nasaClass: 'Soil w/ Embedded Rock Clasts',
       mobilityRisk: 'Caution (Moderate Risk)',
       slopeGrade: '0°–4° Flat Channel Floor',
@@ -279,7 +292,8 @@
       id: 'ares-vallis',
       name: 'Ares Vallis',
       category: 'Catastrophic Outflow Channel',
-      shortTag: 'Mars Pathfinder & Sojourner',
+      shortTag: 'Pathfinder & Sojourner',
+      tier: 'primary',
       nasaClass: 'Big Rocks (>0.3 m) & Scree',
       mobilityRisk: 'Caution / High Obstacle Risk',
       slopeGrade: '0°–4° Floodplain w/ Dense Boulders',
@@ -302,6 +316,7 @@
       name: 'Elysium Planitia',
       category: 'Equatorial Smooth Plain',
       shortTag: 'InSight Lander • Marsquakes',
+      tier: 'primary',
       nasaClass: 'Soil over Bedrock',
       mobilityRisk: 'Lower Risk (Trafficable)',
       slopeGrade: '0°–2° Smooth Basalt Regolith',
@@ -323,7 +338,8 @@
       id: 'hellas-planitia',
       name: 'Hellas Planitia',
       category: 'Giant Impact Basin',
-      shortTag: 'Deepest Impact Basin • -7.1 km',
+      shortTag: 'Deepest Basin • -7.1 km',
+      tier: 'primary',
       nasaClass: 'Soil w/ Ripple Morphology',
       mobilityRisk: 'Caution (Moderate Risk)',
       slopeGrade: '0°–8° Floor / >15° Crater Rim',
@@ -346,6 +362,7 @@
       name: 'Tharsis Region (Tharsis Rise)',
       category: 'Volcanic Plateau',
       shortTag: 'Volcanic Plateau • 5,000 km',
+      tier: 'primary',
       nasaClass: 'Bedrock & Volcanic Shield',
       mobilityRisk: 'Lower Risk (Plateau)',
       slopeGrade: '2°–6° Gentle Regional Rise',
@@ -373,7 +390,7 @@
     showLabels: true,
 
     /**
-     * Initialize markers layer on the map
+     * Initialize markers layer on the map with zoom-level adaptive hierarchy
      */
     init: function (map, onSelectCallback) {
       this.map = map;
@@ -388,10 +405,33 @@
       if (this.visible) {
         this.layerGroup.addTo(this.map);
       }
+
+      // Handle zoom level hierarchy
+      this.bindZoomTierHandling();
     },
 
     /**
-     * Create high-visibility custom card-beacon marker with permanent on-map label
+     * Bind zoom-level adaptive visibility to prevent card overlap at low zooms
+     */
+    bindZoomTierHandling: function () {
+      if (!this.map) return;
+      const updateZoomClasses = () => {
+        const zoom = this.map.getZoom();
+        const container = this.map.getContainer();
+        if (zoom < 5.5) {
+          container.classList.add('map-zoom-global');
+          container.classList.remove('map-zoom-local');
+        } else {
+          container.classList.remove('map-zoom-global');
+          container.classList.add('map-zoom-local');
+        }
+      };
+      this.map.on('zoomend', updateZoomClasses);
+      updateZoomClasses();
+    },
+
+    /**
+     * Create high-visibility, professional aerospace marker with radar target beacon
      */
     createMarker: function (item) {
       const latDir = item.lat >= 0 ? 'N' : 'S';
@@ -423,8 +463,10 @@
       else if (item.nasaClass.includes('Ripple')) nasaUnitColor = '#1E40AF';
       else if (item.nasaClass.includes('Big Rocks')) nasaUnitColor = '#EF4444';
 
+      const tierClass = item.tier === 'detail' ? 'tier-detail' : 'tier-primary';
+
       const iconHtml = `
-        <div class="mars-marker-card ${riskClass}" data-location-id="${item.id}">
+        <div class="mars-marker-card ${riskClass} ${tierClass}" data-location-id="${item.id}">
           <div class="mars-marker-beacon" title="${item.name}">
             <div class="marker-ping" style="border-color:${riskColor};"></div>
             <div class="marker-pin-outer" style="background:${riskColor};box-shadow:0 0 8px ${riskColor};"></div>
@@ -444,14 +486,14 @@
       const customIcon = L.divIcon({
         className: 'mars-custom-div-icon',
         html: iconHtml,
-        iconSize: [220, 36],
-        iconAnchor: [10, 18],
-        popupAnchor: [10, -20]
+        iconSize: [180, 32],
+        iconAnchor: [8, 16],
+        popupAnchor: [8, -18]
       });
 
       const marker = L.marker([item.lat, item.lng], { icon: customIcon });
 
-      // Rich On-Map Popup
+      // Rich Aerospace On-Map Popup
       const popupHtml = `
         <div class="mars-popup-container">
           <div class="popup-header-row">
@@ -498,7 +540,7 @@
       `;
 
       marker.bindPopup(popupHtml, {
-        maxWidth: 300,
+        maxWidth: 290,
         className: 'mars-custom-popup'
       });
 
@@ -518,7 +560,7 @@
       this.showLabels = (typeof show === 'boolean') ? show : !this.showLabels;
       const cards = document.querySelectorAll('.mars-marker-label');
       cards.forEach((card) => {
-        card.style.display = this.showLabels ? 'flex' : 'none';
+        card.style.display = this.showLabels ? '' : 'none';
       });
       return this.showLabels;
     },

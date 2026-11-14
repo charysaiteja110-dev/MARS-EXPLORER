@@ -1,31 +1,42 @@
 /**
  * ============================================================================
- * MARS EXPLORER PRO — Core Map Engine & Projection Configuration
+ * MARS EXPLORER COMMAND CENTER — Core Map Engine & Projection Configuration
  * Module: map.js
+ * Non-Wrapping Planetary Mercator Projection (EPSG:3857)
  * ============================================================================
  */
 
 (function (window) {
   'use strict';
 
-  // Mars Geodetic Constants
-  const MARS_RADIUS_KM = 3389.5; // Mean volumetric radius (IAU / USGS)
+  // Mars Geodetic Constants (IAU / USGS)
+  const MARS_RADIUS_KM = 3389.5; // Mean volumetric Mars radius in kilometers
 
-  // Strict Global Bounding Box in Web Mercator EPSG:3857
+  // Strict Global Bounding Box in Web Mercator
+  // Constrained to latitude [-85.05112878, 85.05112878] and longitude [-180, 180]
   const GLOBAL_MARS_BOUNDS = L.latLngBounds(
-    L.latLng(-85.05112878, -180),
-    L.latLng(85.05112878, 180)
+    L.latLng(-85.05112878, -180.0),
+    L.latLng(85.05112878, 180.0)
   );
+
+  // Mars Non-Wrapping Planetary Web Mercator CRS
+  // Removing wrapLng strictly prevents horizontal world repeating
+  const MarsPlanetaryCRS = L.extend({}, L.CRS.EPSG3857, {
+    wrapLng: null,
+    wrapLat: null,
+    infinite: false
+  });
 
   const MapEngine = {
     map: null,
+    crs: MarsPlanetaryCRS,
     bounds: GLOBAL_MARS_BOUNDS,
     onMoveCallback: null,
     onMouseMoveCallback: null,
     onZoomCallback: null,
 
     /**
-     * Initialize Leaflet map instance with full global extent & no repetition
+     * Initialize Leaflet map instance with strict planetary bounds & zero horizontal repetition
      */
     init: function (containerId, options = {}) {
       const container = document.getElementById(containerId);
@@ -34,25 +45,25 @@
       }
 
       this.map = L.map(containerId, {
-        crs: L.CRS.EPSG3857,
+        crs: MarsPlanetaryCRS,
         zoomControl: false,
         attributionControl: true,
         maxBounds: GLOBAL_MARS_BOUNDS,
-        maxBoundsViscosity: 1.0,
+        maxBoundsViscosity: 1.0, // 100% rigid boundary restraint: prevents panning outside bounds
         worldCopyJump: false,
         bounceAtZoomLimits: false,
         inertia: true,
-        inertiaDeceleration: 3000,
+        inertiaDeceleration: 3500,
         wheelPxPerZoomLevel: 100,
-        zoomSnap: 0.5,
-        zoomDelta: 1.0,
+        zoomSnap: 0.25, // Smooth fractional zoom steps
+        zoomDelta: 0.75,
         minZoom: 2,
         maxZoom: 11
       });
 
       // Style custom attribution
       this.map.attributionControl.setPrefix(
-        '<span style="color:#e25c34;font-weight:700;">MARS EXPLORER PRO</span>'
+        '<span style="color:#D87932;font-weight:700;letter-spacing:0.5px;">MARS EXPLORER COMMAND CENTER</span>'
       );
 
       // Add official Leaflet Metric Scale
@@ -62,7 +73,7 @@
         maxWidth: 140
       }).addTo(this.map);
 
-      // Fit entire global Mars surface into viewport on startup
+      // Fit entire global Mars surface into viewport on startup without world duplication
       this.resetGlobalView(false);
 
       // Bind coordinate tracking events
@@ -86,7 +97,8 @@
       this.map.fitBounds(this.bounds, {
         animate: animate,
         duration: 1.2,
-        padding: [0, 0]
+        padding: [0, 0],
+        maxZoom: 3.5
       });
     },
 

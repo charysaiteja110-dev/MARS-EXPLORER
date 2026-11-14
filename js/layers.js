@@ -1,52 +1,48 @@
 /**
  * ============================================================================
- * MARS EXPLORER PRO — Planetary Cartography & Imagery Layers Engine
+ * MARS EXPLORER COMMAND CENTER — Planetary Layers & NASA Traversability Engine
  * Module: layers.js
+ * Official Datasets: OpenPlanetaryMap v0.2, Caltech CTX 5m, NASA MOLA, HRSC, Viking
+ * NASA Spirit Traversability Model (JPL D-92756)
  * ============================================================================
  */
 
 (function (window) {
   'use strict';
 
-  // Strict Global Planetary Bounds
+  // Mars Spheroid Physical Bounds
   const PLANETARY_BOUNDS = L.latLngBounds(
-    L.latLng(-85.05112878, -180),
-    L.latLng(85.05112878, 180)
+    L.latLng(-85.051129, -180.0),
+    L.latLng(85.051129, 180.0)
   );
 
-  // Custom Leaflet TileLayer for Mars Equirectangular & ArcGISTile Schemas
+  // Custom Equirectangular-to-Mercator Planetary Tile Layer
   const PlanetaryEquirectTileLayer = L.TileLayer.extend({
     getTileUrl: function (coords) {
       const z = coords.z;
-      const maxCol = Math.pow(2, z) - 1;
+      const x = coords.x;
+      const y = coords.y;
 
-      // Return 1x1 transparent GIF for tiles outside planetary bounds to avoid network errors
-      if (coords.x < 0 || coords.x > maxCol || coords.y < 0 || coords.y > maxCol) {
-        return (L.Util && L.Util.emptyImageUrl) ? L.Util.emptyImageUrl : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+      const numTiles = Math.pow(2, z);
+      if (x < 0 || x >= numTiles || y < 0 || y >= numTiles) {
+        return L.Util.emptyImageUrl;
       }
 
-      // Convert Mercator tile coordinates to geographic lat/lng bounds
-      const bounds = this._tileCoordsToBounds(coords);
-      const center = bounds.getCenter();
+      // Web Mercator tile bounds to latitude
+      const n = Math.PI - (2 * Math.PI * y) / numTiles;
+      const latRad = Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
+      const latDeg = (latRad * 180.0) / Math.PI;
 
-      let lng = ((((center.lng + 180) % 360) + 360) % 360) - 180;
-      let lat = Math.max(-85.0511, Math.min(85.0511, center.lat));
-
-      // Equirectangular Tile Matrix Set (2 cols x 1 row at Level 0)
-      const matrixZoom = Math.max(0, Math.min(this.options.maxNativeZoom || 8, Math.max(0, z - 1)));
-      const totalCols = Math.pow(2, matrixZoom + 1);
-      const totalRows = Math.pow(2, matrixZoom);
-
-      let col = Math.floor(((lng + 180) / 360) * totalCols);
-      let row = Math.floor(((90 - lat) / 180) * totalRows);
-
-      col = Math.max(0, Math.min(totalCols - 1, col));
-      row = Math.max(0, Math.min(totalRows - 1, row));
+      // Equirectangular Tile Row (Y)
+      const clampedLat = Math.max(-85.051129, Math.min(85.051129, latDeg));
+      const latNorm = (90.0 - clampedLat) / 180.0;
+      const eqY = Math.floor(latNorm * numTiles);
+      const clampedEqY = Math.max(0, Math.min(numTiles - 1, eqY));
 
       return L.Util.template(this._url, {
-        z: matrixZoom,
-        y: row,
-        x: col
+        z: z,
+        x: x,
+        y: clampedEqY
       });
     }
   });
@@ -162,6 +158,7 @@
     onStatusChange: null,
     lastErrorLogged: 0,
     traversabilityGroup: null,
+    traversabilityVisible: true,
 
     /**
      * Initialize Layer Manager with map instance
@@ -173,66 +170,96 @@
       // Build Traversability Vector Overlay Group
       this.initTraversabilityOverlay();
 
+      // Add Traversability Vector Overlay by default so NASA classification is visible immediately!
+      if (this.traversabilityGroup && this.map) {
+        this.traversabilityGroup.addTo(this.map);
+      }
+
       // Set initial base layer
       this.setBaseLayer('global-surface');
     },
 
     /**
-     * Build Traversability Vector Overlay (NASA Spirit Case Study at Gusev / Home Plate)
+     * Build Traversability & NASA Terrain Classification Vector Overlay
+     * Includes Gusev Crater, Home Plate, Troy Sand Trap, Columbia Hills, and Global Planetary Case Studies
      */
     initTraversabilityOverlay: function () {
       this.traversabilityGroup = L.layerGroup();
 
-      // Traversability Colors from Part 7:
-      // Green: #20A66A (lower estimated mobility risk)
-      // Yellow: #E9B949 (caution)
-      // Red: #D94A45 (high estimated mobility risk)
-      // Grey: #777D83 (unknown or insufficient data)
+      // ======================================================================
+      // 1. GUSEV CRATER / HOME PLATE CASE STUDY (MER SPIRIT JPL D-92756)
+      // ======================================================================
 
-      // 1. Gusev Crater Regional Context Circle
+      // 1.1 Gusev Crater Regional Context Circle (166 km diameter)
       const gusevCircle = L.circle([-14.5684, 175.4726], {
-        radius: 83000, // 83 km radius (166 km crater diameter)
+        radius: 83000,
         color: '#777D83',
         weight: 1.5,
         dashArray: '6, 8',
         fillColor: '#777D83',
         fillOpacity: 0.05
       }).bindPopup(`
-        <div class="popup-category">REGIONAL CASE STUDY (MC-23 AEOLIS)</div>
-        <div class="popup-title">Gusev Crater Impact Basin</div>
-        <div class="popup-details">
-          <span><strong>Diameter:</strong> 166 km | <strong>Floor Elevation:</strong> -1.9 km</span>
-          <span><strong>Status:</strong> Regional terrain outside direct rover track classified as <em>Unknown / Insufficient In-Situ Data</em>.</span>
-          <span><strong>Citation:</strong> NASA Spirit Report JPL D-92756 Chapter 1.</span>
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category">REGIONAL CASE STUDY (MC-23 AEOLIS)</span>
+            <span class="popup-risk-badge" style="background:rgba(119,125,131,0.2);color:#A7A09A;border:1px solid #777D83;">
+              Unknown / Insufficient Data
+            </span>
+          </div>
+          <h4 class="popup-title">Gusev Crater Impact Basin</h4>
+          <div class="popup-summary">
+            166 km impact crater floor. Regional plains outside rover track are classified as <em>Unknown / Insufficient In-Situ Data</em> per Chapter 6 methodology.
+          </div>
+          <div class="popup-stats-strip">
+            <span><strong>Diameter:</strong> 166 km</span>
+            <span><strong>Floor Elevation:</strong> -1.9 km</span>
+            <span><strong>Citation:</strong> JPL D-92756 Ch. 1</span>
+          </div>
         </div>
       `);
       this.traversabilityGroup.addLayer(gusevCircle);
 
-      // 2. Green Trafficable Zone (Competent Bedrock Outcrop)
+      // 1.2 Home Plate Upper Outcrop — GREEN (Outcrop, 0°–4°, Trafficable)
       const greenZone = L.polygon([
         [-14.6045, 175.5245],
         [-14.6045, 175.5280],
         [-14.6068, 175.5285],
         [-14.6068, 175.5240]
       ], {
-        color: '#20A66A',
+        color: '#4ADE80',
         weight: 2,
         fillColor: '#20A66A',
-        fillOpacity: 0.35
+        fillOpacity: 0.4
+      }).bindTooltip('🟢 NASA Outcrop: Home Plate (Trafficable)', {
+        permanent: true,
+        direction: 'top',
+        className: 'nasa-map-tooltip'
       }).bindPopup(`
-        <div class="popup-category" style="color:#20A66A;">TRAFFICABLE TERRAIN (LOWER RISK)</div>
-        <div class="popup-title">Home Plate Upper Outcrop</div>
-        <div class="popup-details">
-          <span><strong>Terrain:</strong> Competent layered volcaniclastic outcrop</span>
-          <span><strong>Slope:</strong> 0° to 4° (Low gradient)</span>
-          <span><strong>NASA Risk Class:</strong> GREEN (Trafficable)</span>
-          <span><strong>Mobility Rationale:</strong> Substantial bearing strength; wheels experience <15% slip.</span>
-          <span><strong>Citation:</strong> Figure 6.2 & Section 6.2.</span>
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#4ADE80;">NASA FIG 6.2: OUTCROP</span>
+            <span class="popup-risk-badge" style="background:rgba(32,166,106,0.2);color:#20A66A;border:1px solid #20A66A;">
+              Trafficable (Green)
+            </span>
+          </div>
+          <h4 class="popup-title">Home Plate Upper Outcrop</h4>
+          <div class="popup-nasa-info">
+            <div class="p-info-row"><span class="p-label">Terrain Unit:</span> <span class="p-val" style="color:#4ADE80;font-weight:700;">Outcrop (Layered Ash)</span></div>
+            <div class="p-info-row"><span class="p-label">Slope Bin:</span> <span class="p-val">0°–4° (Flat)</span></div>
+            <div class="p-info-row"><span class="p-label">Wheel Slip:</span> <span class="p-val" style="color:#20A66A;">&lt;15% Slip (High Traction)</span></div>
+          </div>
+          <div class="popup-summary">
+            Competent volcaniclastic layered rock slabs providing substantial bearing strength. Spirit conducted extensive winter operations and uncovered pure opaline silica (>90% SiO2).
+          </div>
+          <div class="popup-stats-strip">
+            <span><strong>Section:</strong> 6.2 &amp; Figure 6.2</span>
+            <span><strong>Status:</strong> Nominal Mobility</span>
+          </div>
         </div>
       `);
       this.traversabilityGroup.addLayer(greenZone);
 
-      // 3. Yellow Caution Zone (Soil with Embedded Clasts, 4°-8° Slope)
+      // 1.3 Western Apron Scree & Soil — YELLOW (Soil with Rock Clasts, 4°–8°, Caution)
       const yellowZone = L.polygon([
         [-14.6030, 175.5220],
         [-14.6045, 175.5245],
@@ -243,20 +270,36 @@
         weight: 2,
         fillColor: '#E9B949',
         fillOpacity: 0.35
+      }).bindTooltip('🟡 NASA Soil w/ Clasts: Western Apron (Caution)', {
+        permanent: true,
+        direction: 'left',
+        className: 'nasa-map-tooltip'
       }).bindPopup(`
-        <div class="popup-category" style="color:#E9B949;">CAUTIONARY TERRAIN (MODERATE RISK)</div>
-        <div class="popup-title">Western Apron Scree & Soil</div>
-        <div class="popup-details">
-          <span><strong>Terrain:</strong> Soil with embedded rock clasts</span>
-          <span><strong>Slope:</strong> 4° to 8° (Moderate incline)</span>
-          <span><strong>NASA Risk Class:</strong> YELLOW (Caution)</span>
-          <span><strong>Mobility Rationale:</strong> Clasts provide intermittent traction, but regolith shears readily under continuous torque.</span>
-          <span><strong>Citation:</strong> Table 6.1 (NASA Risk Matrix).</span>
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#4B7C59;">NASA FIG 6.2: SOIL W/ CLASTS</span>
+            <span class="popup-risk-badge" style="background:rgba(233,185,73,0.2);color:#E9B949;border:1px solid #E9B949;">
+              Caution (Yellow)
+            </span>
+          </div>
+          <h4 class="popup-title">Western Apron Scree &amp; Soil</h4>
+          <div class="popup-nasa-info">
+            <div class="p-info-row"><span class="p-label">Terrain Unit:</span> <span class="p-val" style="color:#4B7C59;font-weight:700;">Soil w/ Embedded Rock Clasts</span></div>
+            <div class="p-info-row"><span class="p-label">Slope Bin:</span> <span class="p-val">4°–8° (Moderate Incline)</span></div>
+            <div class="p-info-row"><span class="p-label">Wheel Slip:</span> <span class="p-val" style="color:#E9B949;">15%–40% Slip (Controlled Advance)</span></div>
+          </div>
+          <div class="popup-summary">
+            Clasts provide intermittent traction, but regolith shears readily under continuous torque. Required conservative drive commanding to prevent embedment.
+          </div>
+          <div class="popup-stats-strip">
+            <span><strong>Table:</strong> 6.1 Mobility Risk Matrix</span>
+            <span><strong>Sols:</strong> 1844–1885</span>
+          </div>
         </div>
       `);
       this.traversabilityGroup.addLayer(yellowZone);
 
-      // 4. Red High-Risk Zone (Troy Embedding Site — Concealed Sulfate Sand)
+      // 1.4 Troy Embedding Site — RED (Concealed Sulfate Sands, 12° Slope, High Risk)
       const redZone = L.polygon([
         [-14.6072, 175.5228],
         [-14.6088, 175.5248],
@@ -264,23 +307,106 @@
         [-14.6078, 175.5218]
       ], {
         color: '#D94A45',
-        weight: 2,
+        weight: 2.5,
         fillColor: '#D94A45',
-        fillOpacity: 0.45
+        fillOpacity: 0.5
+      }).bindTooltip('🔴 NASA Sand Trap: Troy (High Risk / Sol 1886)', {
+        permanent: true,
+        direction: 'bottom',
+        className: 'nasa-map-tooltip danger'
       }).bindPopup(`
-        <div class="popup-category" style="color:#D94A45;">HIGH RISK TERRAIN (AVOID)</div>
-        <div class="popup-title">Troy Sulfate Sand Trap (Embedding Site)</div>
-        <div class="popup-details">
-          <span><strong>Terrain:</strong> Sulfate sand beneath brittle duricrust crust</span>
-          <span><strong>Slope:</strong> ~12° (South-facing descent)</span>
-          <span><strong>NASA Risk Class:</strong> RED (High Risk / Failure)</span>
-          <span><strong>Event:</strong> Sol 1886 embedding; Sol 1899 LM wheel stall; high-centering on subsurface clast.</span>
-          <span><strong>Citation:</strong> Chapter 6 & Chapter 7 (Table 7.1).</span>
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#EF4444;">NASA FIG 6.2: RIPPLE / SULFATE SAND</span>
+            <span class="popup-risk-badge" style="background:rgba(217,74,69,0.2);color:#D94A45;border:1px solid #D94A45;">
+              High Risk (Red / Impassable)
+            </span>
+          </div>
+          <h4 class="popup-title">Troy Sulfate Sand Trap (Embedding Site)</h4>
+          <div class="popup-nasa-info">
+            <div class="p-info-row"><span class="p-label">Terrain Unit:</span> <span class="p-val" style="color:#1E40AF;font-weight:700;">Concealed Sulfate Sand Trap</span></div>
+            <div class="p-info-row"><span class="p-label">Slope Angle:</span> <span class="p-val">~12° (Southward Tilt)</span></div>
+            <div class="p-info-row"><span class="p-label">Wheel Slip:</span> <span class="p-val" style="color:#D94A45;font-weight:700;">99.7% Wheel Slip (Complete Stoppage)</span></div>
+          </div>
+          <div class="popup-summary">
+            Thin surface duricrust crust broke through into un-cemented ferric and magnesium sulfate sands ("poppy-seed" soil) with negligible shear strength. Rover high-centered on concealed subsurface rock.
+          </div>
+          <div class="popup-stats-strip">
+            <span><strong>Sol Embedded:</strong> Sol 1886 (May 2009)</span>
+            <span><strong>Chapters:</strong> 6 &amp; 7 (Table 7.1)</span>
+          </div>
         </div>
       `);
       this.traversabilityGroup.addLayer(redZone);
 
-      // 5. Candidate Traverse Routes 1, 2, 3
+      // 1.5 Husband Hill Summit Ridge — PURPLE (Bedrock, 4°–8°, Lower Risk)
+      const husbandHill = L.polygon([
+        [-14.598, 175.520],
+        [-14.596, 175.524],
+        [-14.600, 175.526],
+        [-14.602, 175.522]
+      ], {
+        color: '#9333EA',
+        weight: 2,
+        fillColor: '#9333EA',
+        fillOpacity: 0.35
+      }).bindTooltip('🟣 NASA Bedrock: Husband Hill Summit (Lower Risk)', {
+        permanent: false,
+        direction: 'top',
+        className: 'nasa-map-tooltip'
+      }).bindPopup(`
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#9333EA;">NASA FIG 6.2: BEDROCK</span>
+            <span class="popup-risk-badge" style="background:rgba(32,166,106,0.2);color:#20A66A;border:1px solid #20A66A;">
+              Lower Risk (Green)
+            </span>
+          </div>
+          <h4 class="popup-title">Husband Hill Summit Ridge</h4>
+          <div class="popup-nasa-info">
+            <div class="p-info-row"><span class="p-label">Terrain Unit:</span> <span class="p-val" style="color:#9333EA;font-weight:700;">Competent Bedrock Ridge</span></div>
+            <div class="p-info-row"><span class="p-label">Elevation:</span> <span class="p-val">+106 m Above Surrounding Plains</span></div>
+            <div class="p-info-row"><span class="p-label">Bearing Strength:</span> <span class="p-val">High; negligible sinkage</span></div>
+          </div>
+          <div class="popup-summary">
+            Highest point reached by Spirit on Sols 582–600. Exposed bedrock pavement offered excellent traction before descending toward Home Plate.
+          </div>
+        </div>
+      `);
+      this.traversabilityGroup.addLayer(husbandHill);
+
+      // 1.6 Bonneville Crater Rim Boulders — RED (Big Rocks >0.3m, High Obstacle Risk)
+      const bonnevilleRim = L.polygon([
+        [-14.578, 175.485],
+        [-14.576, 175.492],
+        [-14.582, 175.493],
+        [-14.583, 175.486]
+      ], {
+        color: '#EF4444',
+        weight: 2,
+        fillColor: '#EF4444',
+        fillOpacity: 0.35
+      }).bindTooltip('🔴 NASA Big Rocks: Bonneville Rim (>0.3 m Obstacle)', {
+        permanent: false,
+        direction: 'top',
+        className: 'nasa-map-tooltip danger'
+      }).bindPopup(`
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#EF4444;">NASA FIG 6.2: BIG ROCKS (>0.3 M)</span>
+            <span class="popup-risk-badge" style="background:rgba(217,74,69,0.2);color:#D94A45;border:1px solid #D94A45;">
+              High Obstacle Risk (Red)
+            </span>
+          </div>
+          <h4 class="popup-title">Bonneville Crater Ejecta Rim</h4>
+          <div class="popup-summary">
+            Dense boulder field (>0.3 m) ejected by impact. Precluded descent into crater interior due to severe risk of underbody chassis hang-up and wheel motor damage.
+          </div>
+        </div>
+      `);
+      this.traversabilityGroup.addLayer(bonnevilleRim);
+
+      // 1.7 Candidate Traverse Routes 1, 2, 3
       // Route 1 (Abandoned Sol 1829)
       const route1 = L.polyline([
         [-14.6035, 175.5260],
@@ -290,13 +416,19 @@
         color: '#D94A45',
         weight: 3,
         dashArray: '5, 5'
+      }).bindTooltip('Route 1 (Abandoned: Slope >18°)', {
+        direction: 'right',
+        className: 'nasa-map-tooltip danger'
       }).bindPopup(`
-        <div class="popup-category" style="color:#D94A45;">ROUTE 1 (ABANDONED SOL 1829)</div>
-        <div class="popup-title">Northern Home Plate Ascent Attempt</div>
-        <div class="popup-details">
-          <span><strong>Status:</strong> Abandoned on Sol 1829.</span>
-          <span><strong>Hazard:</strong> Slope exceeded 18°; rover experienced excessive wheel slip (>85%).</span>
-          <span><strong>Citation:</strong> Section 5.2.</span>
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#D94A45;">ROUTE 1 (ABANDONED SOL 1829)</span>
+          </div>
+          <h4 class="popup-title">Northern Home Plate Ascent Attempt</h4>
+          <div class="popup-summary">
+            Slope exceeded 18°; rover experienced excessive wheel slip (>85%) while dragging locked right-front wheel. Abandoned on Sol 1829.
+          </div>
+          <div class="popup-stats-strip"><span>Citation: Section 5.2</span></div>
         </div>
       `);
       this.traversabilityGroup.addLayer(route1);
@@ -310,13 +442,19 @@
         color: '#D94A45',
         weight: 3,
         dashArray: '5, 5'
+      }).bindTooltip('Route 2 (Abandoned: Boulders & Ripples)', {
+        direction: 'right',
+        className: 'nasa-map-tooltip danger'
       }).bindPopup(`
-        <div class="popup-category" style="color:#D94A45;">ROUTE 2 (ABANDONED SOL 1843)</div>
-        <div class="popup-title">Northeast Circum-Traverse Attempt</div>
-        <div class="popup-details">
-          <span><strong>Status:</strong> Abandoned on Sol 1843.</span>
-          <span><strong>Hazard:</strong> Blocked by dense boulder field (>0.3 m) and soft ripple dune morphology.</span>
-          <span><strong>Citation:</strong> Section 5.3.</span>
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#D94A45;">ROUTE 2 (ABANDONED SOL 1843)</span>
+          </div>
+          <h4 class="popup-title">Northeast Circum-Traverse Attempt</h4>
+          <div class="popup-summary">
+            Blocked by dense boulder field (>0.3 m) and soft ripple dune morphology. Abandoned on Sol 1843.
+          </div>
+          <div class="popup-stats-strip"><span>Citation: Section 5.3</span></div>
         </div>
       `);
       this.traversabilityGroup.addLayer(route2);
@@ -329,17 +467,83 @@
         [-14.6078, 175.5238]
       ], {
         color: '#E9B949',
-        weight: 3
+        weight: 3.5
+      }).bindTooltip('Route 3 (Active Western Traverse to Troy)', {
+        direction: 'left',
+        className: 'nasa-map-tooltip'
       }).bindPopup(`
-        <div class="popup-category" style="color:#E9B949;">ROUTE 3 (ACTIVE TRAVERSE)</div>
-        <div class="popup-title">Western Apron Traverse to Troy</div>
-        <div class="popup-details">
-          <span><strong>Sols:</strong> 1844–1886.</span>
-          <span><strong>Outcome:</strong> Reached Troy on Sol 1886 where concealed duricrust collapsed into sulfate sands.</span>
-          <span><strong>Citation:</strong> Section 5.4 & Section 6.3.</span>
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#E9B949;">ROUTE 3 (ACTIVE TRAVERSE)</span>
+          </div>
+          <h4 class="popup-title">Western Apron Traverse to Troy</h4>
+          <div class="popup-summary">
+            Traversed Sols 1844–1886 along the western base of Home Plate until breaking through duricrust into concealed sulfate sands at Troy on Sol 1886.
+          </div>
+          <div class="popup-stats-strip"><span>Citation: Section 5.4 &amp; 6.3</span></div>
         </div>
       `);
       this.traversabilityGroup.addLayer(route3);
+
+      // ======================================================================
+      // 2. PLANETARY CASE STUDIES (NASA CLASSIFICATION APPLIED GLOBALLY)
+      // ======================================================================
+
+      // 2.1 Jezero Crater River Delta — GREEN (Outcrop, Layered Siltstones)
+      const jezeroDelta = L.polygon([
+        [18.35, 77.52],
+        [18.42, 77.55],
+        [18.40, 77.62],
+        [18.33, 77.58]
+      ], {
+        color: '#4ADE80',
+        weight: 1.5,
+        fillColor: '#20A66A',
+        fillOpacity: 0.3
+      }).bindTooltip('🟢 NASA Outcrop: Jezero River Delta (Trafficable)', {
+        direction: 'top',
+        className: 'nasa-map-tooltip'
+      }).bindPopup(`
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#4ADE80;">NASA FIG 6.2: OUTCROP</span>
+            <span class="popup-risk-badge" style="background:rgba(32,166,106,0.2);color:#20A66A;border:1px solid #20A66A;">Trafficable</span>
+          </div>
+          <h4 class="popup-title">Jezero Crater Sedimentary Delta</h4>
+          <div class="popup-summary">
+            Layered clay and mudstone river delta. High bearing strength; ideal trafficability for Perseverance rover sample collection.
+          </div>
+        </div>
+      `);
+      this.traversabilityGroup.addLayer(jezeroDelta);
+
+      // 2.2 Gale Crater Bagnold Dunes — BLUE (Soil with Ripple Morphology)
+      const galeDunes = L.polygon([
+        [-5.40, 137.40],
+        [-5.36, 137.43],
+        [-5.39, 137.47],
+        [-5.43, 137.44]
+      ], {
+        color: '#1E40AF',
+        weight: 1.5,
+        fillColor: '#1E40AF',
+        fillOpacity: 0.35
+      }).bindTooltip('🔵 NASA Ripple Morphology: Bagnold Dunes (High Slip)', {
+        direction: 'bottom',
+        className: 'nasa-map-tooltip danger'
+      }).bindPopup(`
+        <div class="mars-popup-container">
+          <div class="popup-header-row">
+            <span class="popup-category" style="color:#1E40AF;">NASA FIG 6.2: RIPPLE MORPHOLOGY</span>
+            <span class="popup-risk-badge" style="background:rgba(217,74,69,0.2);color:#D94A45;border:1px solid #D94A45;">High Risk</span>
+          </div>
+          <h4 class="popup-title">Gale Crater Bagnold Active Dunes</h4>
+          <div class="popup-summary">
+            Unconsolidated active aeolian dunes with steep slip faces (>15°). Curiosity navigates along perimeter to avoid wheel sinkage.
+          </div>
+        </div>
+      `);
+      this.traversabilityGroup.addLayer(galeDunes);
     },
 
     /**
@@ -420,23 +624,39 @@
       });
       this.activeBaseLayer.addTo(this.map);
 
-      // Handle Traversability vector overlay
+      // Make sure vector classification overlay stays visible on top if enabled
+      if (this.traversabilityVisible && this.traversabilityGroup && !this.map.hasLayer(this.traversabilityGroup)) {
+        this.traversabilityGroup.addTo(this.map);
+      }
+
+      // If rover-traversability base layer selected, fly to Gusev Crater case study
       if (layerId === 'rover-traversability') {
-        if (this.traversabilityGroup && !this.map.hasLayer(this.traversabilityGroup)) {
-          this.traversabilityGroup.addTo(this.map);
-        }
-        // Smoothly center on Gusev Crater case study area
         this.map.flyTo([-14.606, 175.525], 9, {
           duration: 1.8,
           easeLinearity: 0.25
         });
+      }
+
+      return true;
+    },
+
+    /**
+     * Toggle Traversability / NASA Classification Vector Overlay
+     */
+    toggleTraversabilityOverlay: function (show) {
+      this.traversabilityVisible = (typeof show === 'boolean') ? show : !this.traversabilityVisible;
+
+      if (this.traversabilityVisible) {
+        if (this.traversabilityGroup && !this.map.hasLayer(this.traversabilityGroup)) {
+          this.traversabilityGroup.addTo(this.map);
+        }
       } else {
         if (this.traversabilityGroup && this.map.hasLayer(this.traversabilityGroup)) {
           this.map.removeLayer(this.traversabilityGroup);
         }
       }
 
-      return true;
+      return this.traversabilityVisible;
     },
 
     /**

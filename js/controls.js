@@ -86,6 +86,16 @@
         tileStatusBadge: document.getElementById('tile-status-badge'),
         retryTileLink: document.getElementById('retry-tile-link'),
 
+        // On-Map NASA Classification HUD
+        mapClassificationHud: document.getElementById('map-classification-hud'),
+        classHudMinimizeBtn: document.getElementById('class-hud-minimize-btn'),
+        classHudTabs: document.querySelectorAll('.class-hud-tab'),
+        classQuickList: document.getElementById('class-quick-list'),
+        classQuickDetail: document.getElementById('class-quick-detail'),
+        btnFocusStudyHud: document.getElementById('btn-focus-study-hud'),
+        btnTogglePolygonsHud: document.getElementById('btn-toggle-polygons-hud'),
+        btnToggleLabelsHud: document.getElementById('btn-toggle-labels-hud'),
+
         // Loading Overlay
         loadingOverlay: document.getElementById('loading-overlay'),
         loadingProgressFill: document.getElementById('loading-progress-fill'),
@@ -103,9 +113,132 @@
     init: function () {
       this.cacheElements();
       this.renderLayerCards();
+      this.renderClassificationHudTerrains();
+      this.bindClassificationHudEvents();
       this.bindEvents();
       this.startSolClocks();
       this.updateDynamicLegend();
+    },
+
+    /**
+     * Render the 7 NASA Figure 6.2 Terrains in the On-Map HUD
+     */
+    renderClassificationHudTerrains: function () {
+      const container = this.dom.classQuickList;
+      if (!container || !window.SpiritMissionData) return;
+
+      const cats = window.SpiritMissionData.terrainClassificationCategories;
+      container.innerHTML = '';
+
+      cats.forEach((cat, idx) => {
+        const item = document.createElement('div');
+        item.className = `class-quick-item ${idx === 0 ? 'active' : ''}`;
+        item.setAttribute('data-cat-id', cat.id);
+
+        let riskBadgeClass = 'risk-pill green';
+        if (cat.mobilityRisk === 'Red') riskBadgeClass = 'risk-pill red';
+        else if (cat.mobilityRisk === 'Yellow') riskBadgeClass = 'risk-pill yellow';
+
+        item.innerHTML = `
+          <div class="class-quick-color" style="background-color:${cat.color};"></div>
+          <div class="class-quick-info">
+            <span class="class-quick-name">${cat.name}</span>
+            <span class="${riskBadgeClass}">${cat.riskRating}</span>
+          </div>
+        `;
+
+        const showDetail = () => {
+          container.querySelectorAll('.class-quick-item').forEach(el => el.classList.remove('active'));
+          item.classList.add('active');
+          if (this.dom.classQuickDetail) {
+            this.dom.classQuickDetail.innerHTML = `
+              <div class="detail-active-title">
+                <span style="color:${cat.color};">${cat.name}</span>
+                <span style="font-size:8px;padding:1px 4px;border-radius:2px;background:rgba(255,255,255,0.06);">${cat.slopeHazards}</span>
+              </div>
+              <div style="font-size:9px;color:var(--text-secondary);line-height:1.4;">${cat.description}</div>
+              <div style="margin-top:4px;border-top:1px dashed var(--border-subtle);padding-top:4px;font-size:8.5px;color:var(--terrain-highlight);">
+                <strong>Mission Context:</strong> ${cat.spiritExperience}
+              </div>
+            `;
+          }
+        };
+
+        item.addEventListener('mouseenter', showDetail);
+        item.addEventListener('click', showDetail);
+
+        container.appendChild(item);
+
+        if (idx === 0) {
+          showDetail();
+        }
+      });
+    },
+
+    /**
+     * Bind On-Map Classification HUD Events
+     */
+    bindClassificationHudEvents: function () {
+      // Toggle minimize / collapse
+      if (this.dom.classHudMinimizeBtn && this.dom.mapClassificationHud) {
+        this.dom.classHudMinimizeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.dom.mapClassificationHud.classList.toggle('collapsed');
+        });
+      }
+
+      // Tab switcher
+      if (this.dom.classHudTabs) {
+        this.dom.classHudTabs.forEach((tab) => {
+          tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-class-tab');
+            this.dom.classHudTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const panes = {
+              'fig62': document.getElementById('pane-fig62'),
+              'mobility-risk': document.getElementById('pane-mobility-risk'),
+              'slope-scale': document.getElementById('pane-slope-scale')
+            };
+
+            Object.entries(panes).forEach(([k, pane]) => {
+              if (pane) pane.classList.toggle('active', k === targetTab);
+            });
+          });
+        });
+      }
+
+      // Action: Focus Gusev / Home Plate Study Area
+      if (this.dom.btnFocusStudyHud) {
+        this.dom.btnFocusStudyHud.addEventListener('click', () => {
+          if (window.MarsMapEngine && window.MarsMapEngine.map) {
+            window.MarsMapEngine.map.flyTo([-14.606, 175.525], 9, {
+              duration: 1.8,
+              easeLinearity: 0.25
+            });
+          }
+        });
+      }
+
+      // Action: Toggle Ground Polygons on Map
+      if (this.dom.btnTogglePolygonsHud) {
+        this.dom.btnTogglePolygonsHud.addEventListener('click', () => {
+          if (window.MarsLayers) {
+            const visible = window.MarsLayers.toggleTraversabilityOverlay();
+            this.dom.btnTogglePolygonsHud.classList.toggle('active', visible);
+          }
+        });
+      }
+
+      // Action: Toggle Marker Label Badges on Map
+      if (this.dom.btnToggleLabelsHud) {
+        this.dom.btnToggleLabelsHud.addEventListener('click', () => {
+          if (window.MarsLocations) {
+            const visible = window.MarsLocations.toggleLabels();
+            this.dom.btnToggleLabelsHud.classList.toggle('active', visible);
+          }
+        });
+      }
     },
 
     /**
@@ -1254,12 +1387,14 @@
 
       if (d.landmarkSelect) d.landmarkSelect.value = landmark.id;
       if (d.landmarkDrawer) d.landmarkDrawer.classList.add('open');
+      if (d.mapClassificationHud) d.mapClassificationHud.classList.add('collapsed');
     },
 
     closeLandmarkDrawer: function () {
       this.currentLandmark = null;
       if (this.dom.landmarkDrawer) this.dom.landmarkDrawer.classList.remove('open');
       if (this.dom.landmarkSelect) this.dom.landmarkSelect.value = '';
+      if (this.dom.mapClassificationHud) this.dom.mapClassificationHud.classList.remove('collapsed');
     },
 
     /**

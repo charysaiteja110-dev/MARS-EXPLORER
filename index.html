@@ -312,6 +312,114 @@
           </div>
         </div>
 
+        <!-- Floating On-Map NASA Classification Systems HUD -->
+        <aside id="map-classification-hud" class="map-classification-hud" role="region" aria-label="NASA Classification Systems on Map">
+          <div class="class-hud-header">
+            <div class="class-hud-titles">
+              <span class="class-hud-tag">NASA MER SPIRIT // JPL D-92756</span>
+              <h3 class="class-hud-title">NASA Planetary Classification</h3>
+            </div>
+            <div class="class-hud-header-actions">
+              <button id="class-hud-minimize-btn" class="class-hud-icon-btn" title="Toggle Compact / Expanded HUD" aria-label="Toggle Classification HUD">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="4 14 10 14 10 20"></polyline>
+                  <polyline points="20 10 14 10 14 4"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- HUD Mode Navigation Tabs -->
+          <div class="class-hud-tabs" role="tablist">
+            <button class="class-hud-tab active" data-class-tab="fig62" role="tab" aria-selected="true">Fig 6.2 Terrains</button>
+            <button class="class-hud-tab" data-class-tab="mobility-risk" role="tab" aria-selected="false">Mobility Risk</button>
+            <button class="class-hud-tab" data-class-tab="slope-scale" role="tab" aria-selected="false">Slope Scale</button>
+          </div>
+
+          <div class="class-hud-body">
+            <!-- Pane 1: Figure 6.2 Terrains (7 Classes) -->
+            <div id="pane-fig62" class="class-pane active">
+              <div class="class-quick-list" id="class-quick-list">
+                <!-- Dynamically populated from controls.js -->
+              </div>
+              <div id="class-quick-detail" class="class-quick-detail">
+                <div class="detail-placeholder">&gt; Click any NASA terrain unit above to view slip rating &amp; hazard diagnostic.</div>
+              </div>
+            </div>
+
+            <!-- Pane 2: Mobility Risk Scale -->
+            <div id="pane-mobility-risk" class="class-pane">
+              <div class="risk-scale-box">
+                <div class="risk-item-row" data-risk="green">
+                  <span class="risk-pill green">GREEN</span>
+                  <div class="risk-item-text">
+                    <strong>Trafficable (Lower Risk)</strong>
+                    <span>Slopes &lt;8° on bedrock/outcrop; wheel slip &lt;15%. Nominal torque &amp; high bearing.</span>
+                  </div>
+                </div>
+                <div class="risk-item-row" data-risk="yellow">
+                  <span class="risk-pill yellow">YELLOW</span>
+                  <div class="risk-item-text">
+                    <strong>Caution (Moderate Risk)</strong>
+                    <span>Slopes 8°–12°, soil with clasts, or gentle ripples. Controlled advance &amp; slip monitoring.</span>
+                  </div>
+                </div>
+                <div class="risk-item-row" data-risk="red">
+                  <span class="risk-pill red">RED</span>
+                  <div class="risk-item-text">
+                    <strong>High Risk (Impassable / Avoid)</strong>
+                    <span>Slopes &gt;12°–16°, concealed sulfate sands (Troy trap), or boulders &gt;0.3 m.</span>
+                  </div>
+                </div>
+                <div class="risk-item-row" data-risk="grey">
+                  <span class="risk-pill grey">GREY</span>
+                  <div class="risk-item-text">
+                    <strong>Unknown / Insufficient Data</strong>
+                    <span>Unsurveyed regional terrain beyond high-resolution orbiter/in-situ verification.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 3: Slope Scale -->
+            <div id="pane-slope-scale" class="class-pane">
+              <div class="slope-meter-container">
+                <div class="slope-meter-header">
+                  <span>NASA TRAVERSABILITY SLOPE GAUGE</span>
+                  <span class="stat-source">Chapter 6</span>
+                </div>
+                <div class="slope-strip">
+                  <div class="slope-step green" title="<0° Downhill"><span class="slope-deg">&lt;0°</span><span class="slope-lbl">Downhill</span></div>
+                  <div class="slope-step green" title="0°–4° Flat"><span class="slope-deg">0°–4°</span><span class="slope-lbl">Flat</span></div>
+                  <div class="slope-step green" title="4°–8° Gentle"><span class="slope-deg">4°–8°</span><span class="slope-lbl">Gentle</span></div>
+                  <div class="slope-step yellow" title="8°–12° Moderate"><span class="slope-deg">8°–12°</span><span class="slope-lbl">Caution</span></div>
+                  <div class="slope-step red" title="12°–16° Steep"><span class="slope-deg">12°–16°</span><span class="slope-lbl">Steep</span></div>
+                  <div class="slope-step red-dark" title=">16° Critical"><span class="slope-deg">&gt;16°</span><span class="slope-lbl">Critical</span></div>
+                </div>
+                <div class="slope-guidance-box">
+                  <strong>Standard Drive Limit:</strong> 12° nominal inclination. Spirit experienced critical 99.7% immobilization at Troy on a 12° south-facing slope due to loose sulfate sub-soil.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Bar on Map HUD -->
+          <div class="class-hud-footer">
+            <button id="btn-focus-study-hud" class="hud-action-btn primary" title="Fly map directly to Gusev Crater / Home Plate case study">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="12 8 8 12 12 16 12 8"></polygon></svg>
+              <span>Focus Home Plate</span>
+            </button>
+            <button id="btn-toggle-polygons-hud" class="hud-action-btn active" title="Toggle Ground Classification Polygons on Map">
+              <span class="hud-indicator-dot"></span>
+              <span>Polygons</span>
+            </button>
+            <button id="btn-toggle-labels-hud" class="hud-action-btn active" title="Toggle Marker Label Badges on Map">
+              <span class="hud-indicator-dot"></span>
+              <span>Labels</span>
+            </button>
+          </div>
+        </aside>
+
         <!-- ================================================================
              SECTION OVERLAYS & SCIENTIFIC PANELS
              ================================================================ -->

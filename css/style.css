@@ -722,6 +722,691 @@ button, input, select, textarea {
 }
 
 /* --------------------------------------------------------------------------
+   6b. Custom Mars Map Markers, On-Map Label Badges & Popups
+   -------------------------------------------------------------------------- */
+.mars-custom-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.mars-marker-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  transition: transform 0.15s ease, z-index 0.15s ease;
+}
+
+.mars-marker-card:hover {
+  transform: scale(1.05);
+  z-index: 1000 !important;
+}
+
+.mars-marker-beacon {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.marker-ping {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--mars-accent);
+  animation: beacon-ping 2.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes beacon-ping {
+  0% { transform: scale(0.4); opacity: 0.9; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+.marker-pin-outer {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--mars-accent);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px rgba(216, 121, 50, 0.8);
+  transition: all 0.15s ease;
+}
+
+.mars-marker-card:hover .marker-pin-outer {
+  box-shadow: 0 0 14px #ffffff, 0 0 8px var(--mars-accent);
+}
+
+.mars-marker-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(16, 15, 15, 0.94);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 4px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mars-marker-card:hover .mars-marker-label {
+  border-color: var(--mars-accent);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(216, 121, 50, 0.35);
+}
+
+.m-label-name {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.m-label-sub {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.m-tag {
+  color: var(--text-secondary);
+}
+
+.m-nasa-pill {
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 7.5px;
+  font-weight: 700;
+  border: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Leaflet Custom Popups */
+.leaflet-popup-content-wrapper {
+  background: #181514 !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: var(--shadow-floating) !important;
+  color: var(--text-primary) !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.leaflet-popup-tip {
+  background: #181514 !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.mars-popup-container {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 290px;
+}
+
+.popup-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.popup-category {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  color: var(--mars-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.popup-risk-badge {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.popup-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.popup-coords-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 5px;
+}
+
+.popup-nasa-info {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 9px;
+}
+
+.p-info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: var(--font-mono);
+}
+
+.p-label {
+  color: var(--text-muted);
+}
+
+.p-val {
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.popup-summary {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+.popup-stats-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--terrain-highlight);
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 5px;
+}
+
+.popup-inspect-btn {
+  width: 100%;
+  padding: 6px 8px;
+  background: rgba(216, 121, 50, 0.15);
+  border: 1px solid var(--mars-accent);
+  color: #ffffff;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--trans-fast);
+  margin-top: 3px;
+}
+
+.popup-inspect-btn:hover {
+  background: var(--mars-accent);
+  color: #ffffff;
+}
+
+/* Map Polygons Permanent/Hover Tooltips */
+.nasa-map-tooltip {
+  background: rgba(16, 15, 15, 0.92) !important;
+  border: 1px solid var(--border-color) !important;
+  color: #ffffff !important;
+  font-family: var(--font-mono) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  border-radius: var(--radius-xs) !important;
+  padding: 3px 6px !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7) !important;
+}
+
+.nasa-map-tooltip.danger {
+  border-color: var(--trav-red) !important;
+  color: #ff9994 !important;
+}
+
+.nasa-map-tooltip::before {
+  border-top-color: var(--border-color) !important;
+}
+
+/* --------------------------------------------------------------------------
+   6c. Floating On-Map NASA Classification Systems HUD
+   -------------------------------------------------------------------------- */
+.map-classification-hud {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 330px;
+  max-height: calc(100% - 70px);
+  background: rgba(24, 21, 20, 0.95);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-floating);
+  backdrop-filter: blur(8px);
+  z-index: 420;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.map-classification-hud.collapsed {
+  max-height: 40px;
+  width: 240px;
+  overflow: hidden;
+}
+
+.class-hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: var(--panel-primary);
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.class-hud-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.class-hud-tag {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  color: var(--mars-accent);
+  letter-spacing: 0.5px;
+}
+
+.class-hud-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.class-hud-header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.class-hud-icon-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-xs);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.class-hud-icon-btn:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.class-hud-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-sidebar);
+}
+
+.class-hud-tab {
+  flex: 1;
+  padding: 6px 4px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--trans-fast);
+}
+
+.class-hud-tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.class-hud-tab.active {
+  color: var(--mars-accent);
+  border-bottom-color: var(--mars-accent);
+  font-weight: 700;
+  background: rgba(216, 121, 50, 0.08);
+}
+
+.class-hud-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+}
+
+.class-pane {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.class-pane.active {
+  display: flex;
+}
+
+/* Quick 7 Classes List */
+.class-quick-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.class-quick-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: var(--radius-xs);
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.class-quick-item:hover {
+  border-color: var(--text-muted);
+  background-color: var(--panel-hover);
+}
+
+.class-quick-item.active {
+  border-color: var(--mars-accent);
+  background-color: rgba(216, 121, 50, 0.12);
+}
+
+.class-quick-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.class-quick-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.class-quick-name {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.class-quick-risk {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+.class-quick-detail {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.detail-placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.detail-active-title {
+  color: #ffffff;
+  font-weight: 700;
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Mobility Risk Scale Box */
+.risk-scale-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.risk-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px;
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+}
+
+.risk-pill {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.risk-pill.green {
+  background: var(--trav-green-bg);
+  color: var(--trav-green);
+  border: 1px solid var(--trav-green);
+}
+
+.risk-pill.yellow {
+  background: var(--trav-yellow-bg);
+  color: var(--trav-yellow);
+  border: 1px solid var(--trav-yellow);
+}
+
+.risk-pill.red {
+  background: var(--trav-red-bg);
+  color: var(--trav-red);
+  border: 1px solid var(--trav-red);
+}
+
+.risk-pill.grey {
+  background: var(--trav-grey-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--trav-grey);
+}
+
+.risk-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.risk-item-text strong {
+  font-size: 11px;
+  color: #ffffff;
+}
+
+.risk-item-text span {
+  font-size: 9.5px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+/* Slope Meter */
+.slope-meter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 8px;
+}
+
+.slope-meter-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--mars-accent);
+}
+
+.slope-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  margin: 3px 0;
+}
+
+.slope-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 2px;
+  border-radius: 2px;
+  text-align: center;
+}
+
+.slope-step.green { background: rgba(32, 166, 106, 0.25); border: 1px solid var(--trav-green); }
+.slope-step.yellow { background: rgba(233, 185, 73, 0.25); border: 1px solid var(--trav-yellow); }
+.slope-step.red { background: rgba(217, 74, 69, 0.25); border: 1px solid var(--trav-red); }
+.slope-step.red-dark { background: rgba(160, 30, 25, 0.4); border: 1px solid #ff4d47; }
+
+.slope-deg {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.slope-lbl {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: var(--text-secondary);
+}
+
+.slope-guidance-box {
+  font-size: 9.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 5px;
+}
+
+/* HUD Footer Action Buttons */
+.class-hud-footer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background-color: var(--panel-primary);
+  border-top: 1px solid var(--border-color);
+}
+
+.hud-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 6px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.hud-action-btn:hover {
+  background-color: var(--panel-hover);
+  color: var(--text-primary);
+}
+
+.hud-action-btn.primary {
+  background-color: rgba(216, 121, 50, 0.18);
+  border-color: var(--mars-accent);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.hud-action-btn.primary:hover {
+  background-color: var(--mars-accent);
+}
+
+.hud-action-btn.active {
+  color: #ffffff;
+  border-color: var(--border-color);
+}
+
+.hud-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--trav-green);
+  box-shadow: 0 0 5px var(--trav-green);
+}
+
+.hud-action-btn:not(.active) .hud-indicator-dot {
+  background-color: var(--text-muted);
+  box-shadow: none;
+}
+
+/* --------------------------------------------------------------------------
    7. Flyout Panels (Layer Drawer & Contextual Landmark Drawer)
    -------------------------------------------------------------------------- */
 .map-layer-drawer {

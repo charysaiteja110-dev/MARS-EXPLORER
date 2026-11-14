@@ -435,3 +435,4 @@
   window.SpiritMissionData = SpiritMissionData;
 
 })(window);
+

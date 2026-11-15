@@ -631,18 +631,27 @@ button, input, select, textarea {
 /* Spheroid Distance Measurement HUD Card */
 .measure-hud-card {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  z-index: 450;
-  background-color: var(--panel-primary);
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 750;
+  background-color: rgba(16, 15, 15, 0.95);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--mars-accent);
   border-radius: var(--radius-sm);
   padding: 10px 14px;
-  box-shadow: var(--shadow-floating);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(224, 90, 71, 0.25);
   display: none;
   flex-direction: column;
-  gap: 5px;
-  width: 270px;
+  gap: 8px;
+  width: 350px;
+  max-width: calc(100vw - 40px);
+  animation: hud-pop 0.2s ease-out;
+}
+
+@keyframes hud-pop {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 .measure-hud-card.active {
@@ -653,6 +662,14 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 5px;
+}
+
+.m-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .m-title {
@@ -664,61 +681,208 @@ button, input, select, textarea {
   text-transform: uppercase;
 }
 
+.m-status-badge {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  letter-spacing: 0.4px;
+}
+
+.m-status-badge.active {
+  background: rgba(224, 90, 71, 0.2);
+  color: #fb923c;
+  border-color: #fb923c;
+}
+
+.m-status-badge.finished {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border-color: #4ade80;
+}
+
 .m-sub {
   font-family: var(--font-mono);
   font-size: 8px;
   color: var(--text-muted);
 }
 
+.m-readout-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 6px 10px;
+}
+
+.m-readout-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.m-readout-lbl {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
 .m-result {
   font-family: var(--font-mono);
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: #ffffff;
   display: flex;
   align-items: baseline;
   gap: 4px;
+  line-height: 1.2;
 }
 
 .m-unit {
   font-size: 10px;
-  color: var(--terrain-highlight);
+  color: var(--mars-accent);
+}
+
+.m-readout-secondary {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  border-left: 1px dashed var(--border-subtle);
+  padding-left: 8px;
+}
+
+.m-sub-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 8px;
+}
+
+.m-stat-lbl {
+  color: var(--text-muted);
+}
+
+.m-stat-val {
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .m-hint {
   font-family: var(--font-mono);
   font-size: 9px;
-  color: var(--text-muted);
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 4px 6px;
+  border-radius: var(--radius-xs);
+  border-left: 2px solid var(--mars-accent);
 }
 
 .m-actions {
   display: flex;
   gap: 6px;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .m-btn {
   flex: 1;
-  height: 24px;
+  height: 26px;
   border-radius: var(--radius-xs);
   font-family: var(--font-mono);
   font-size: 10px;
+  font-weight: 600;
   cursor: pointer;
   background-color: var(--panel-secondary);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   transition: all var(--trans-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .m-btn:hover {
   background-color: var(--panel-hover);
   color: var(--text-primary);
+  border-color: var(--mars-accent);
+}
+
+.m-btn.secondary {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+}
+
+.m-btn.secondary:hover {
+  background: rgba(56, 189, 248, 0.25);
+  color: #ffffff;
 }
 
 .m-btn.primary {
   background-color: var(--mars-accent);
   border-color: var(--mars-accent);
   color: #ffffff;
+}
+
+.m-btn.primary:hover {
+  background-color: #b91c1c;
+}
+
+/* Measurement Waypoint Map Markers */
+.measure-marker-icon {
+  background: none;
+  border: none;
+}
+
+.m-point-pill {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #111827;
+  border: 2px solid #ff784e;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(255, 120, 78, 0.8), 0 2px 5px rgba(0,0,0,0.8);
+  position: relative;
+}
+
+.m-point-pill.start {
+  border-color: #22c55e;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.9), 0 2px 5px rgba(0,0,0,0.8);
+}
+
+.m-point-pill.current {
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.9), 0 2px 5px rgba(0,0,0,0.8);
+}
+
+.m-point-pulse {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  border: 2px solid #38bdf8;
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
 
 /* --------------------------------------------------------------------------
@@ -2498,4 +2662,780 @@ button, input, select, textarea {
   .hide-sm {
     display: none;
   }
+}
+
+
+/* ==========================================================================
+   FEATURE 1: MARS TERRAIN INTELLIGENCE — SIDE PANEL & LEGENDS
+   ========================================================================== */
+
+.terrain-intelligence-panel {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  bottom: 14px;
+  width: 370px;
+  max-width: 90vw;
+  background-color: var(--panel-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-floating);
+  z-index: 610;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slide-in-panel 0.25s ease-out;
+}
+
+.terrain-intelligence-panel.hidden {
+  display: none !important;
+}
+
+@keyframes slide-in-panel {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.panel-header {
+  padding: 12px 14px;
+  background-color: var(--panel-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.panel-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--mars-accent);
+  text-transform: uppercase;
+}
+
+.panel-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+.panel-coords {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.panel-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color var(--trans-fast);
+}
+
+.panel-close-btn:hover {
+  color: var(--text-primary);
+}
+
+.panel-body {
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+}
+
+.status-banner.available {
+  background-color: rgba(32, 166, 106, 0.12);
+  border-left: 3px solid var(--trav-green);
+  color: #34d399;
+}
+
+.status-banner.unknown {
+  background-color: rgba(100, 116, 139, 0.15);
+  border-left: 3px solid #64748b;
+  color: #94a3b8;
+}
+
+.status-banner.baseline {
+  background-color: rgba(216, 121, 50, 0.12);
+  border-left: 3px solid var(--mars-accent);
+  color: #fb923c;
+}
+
+.status-banner .status-sub {
+  font-size: 9.5px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.inspector-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.inspector-metrics-grid .metric-card {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-card .m-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.metric-card .m-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 3px 0 1px;
+}
+
+.metric-card .m-sub {
+  font-size: 8px;
+  color: var(--text-secondary);
+}
+
+.val-unavailable {
+  color: var(--text-muted);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.inspector-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.observation-box {
+  display: flex;
+  gap: 10px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 8px 10px;
+}
+
+.observation-box .obs-icon {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.obs-icon.rock-icon { color: #818cf8; }
+.obs-icon.sand-icon { color: #fb923c; }
+.obs-icon.surface-icon { color: #34d399; }
+
+.obs-content strong {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  display: block;
+}
+
+.obs-content p {
+  font-size: 11px;
+  color: var(--text-primary);
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+.provenance-section {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.prov-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.prov-lbl {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+}
+
+.prov-val {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  text-align: right;
+  max-width: 65%;
+}
+
+.prov-alert {
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 6px;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+.prov-alert strong {
+  color: var(--mars-accent);
+}
+
+/* Inspection Pin on Map */
+.terrain-inspect-pin {
+  position: relative;
+}
+
+.inspect-pin-dot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--mars-accent);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--mars-accent);
+}
+
+.inspect-pin-pulse {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--mars-accent);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: inspect-pulse 1.8s ease-out infinite;
+}
+
+@keyframes inspect-pulse {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
+/* Tooltips */
+.terrain-tooltip {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.terrain-tooltip .tooltip-badge {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-bottom: 3px;
+}
+
+.terrain-tooltip.unknown .tooltip-badge {
+  background-color: #64748b;
+  color: #fff;
+}
+
+.tooltip-caution {
+  color: #f87171;
+  font-size: 9.5px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.tooltip-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Dynamic Legend Scale Chips */
+.dynamic-terrain-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9.5px;
+}
+
+.legend-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--mars-accent);
+  font-size: 8.5px;
+}
+
+.legend-scale-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.scale-chip {
+  padding: 2px 6px;
+  background-color: var(--panel-primary);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+}
+
+/* ==========================================================================
+   FEATURE 2: HISTORICAL ROVER ROUTES & PROGRESSION TIMELINE
+   ========================================================================== */
+
+.rover-routes-selector-panel {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 320px;
+  background-color: rgba(16, 15, 15, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  z-index: 550;
+  box-shadow: var(--shadow-floating);
+  transition: all var(--trans-fast);
+}
+
+.rover-routes-selector-panel.collapsed {
+  width: 250px;
+  padding: 8px 10px;
+}
+
+.rover-routes-selector-panel.collapsed .rover-cards-grid {
+  display: none !important;
+}
+
+.rover-routes-selector-panel.collapsed .rover-selector-header {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.rover-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 6px;
+}
+
+.selector-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--mars-accent);
+  letter-spacing: 0.5px;
+}
+
+.selector-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.sel-btn {
+  background: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.sel-btn:hover {
+  background: var(--panel-hover);
+  color: var(--text-primary);
+  border-color: var(--mars-accent);
+}
+
+.rover-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.rover-selector-card {
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+  display: flex;
+  flex-direction: column;
+}
+
+.rover-selector-card:hover {
+  border-color: var(--border-hover);
+  background-color: var(--panel-hover);
+}
+
+.rover-selector-card.active {
+  border-color: var(--mars-accent);
+  background-color: rgba(216, 121, 50, 0.12);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rover-color-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.card-top strong {
+  font-size: 11px;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.r-status-badge {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.r-status-badge.active {
+  background-color: rgba(32, 166, 106, 0.2);
+  color: #34d399;
+}
+
+.r-status-badge.historical {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.card-site {
+  font-size: 9.5px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.card-stats {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 3px;
+}
+
+/* Rover Route Timeline HUD (Bottom-Center above status bar) */
+.rover-route-timeline-hud {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 580px;
+  max-width: 90vw;
+  background-color: rgba(16, 15, 15, 0.94);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  z-index: 550;
+  box-shadow: var(--shadow-floating);
+}
+
+.timeline-hud-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.timeline-meta-col {
+  min-width: 150px;
+}
+
+.timeline-tag {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  color: var(--mars-accent);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.timeline-rover-title {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 1px 0;
+}
+
+.timeline-sol-readout {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.timeline-date-sub {
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.timeline-slider-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.timeline-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--panel-secondary);
+  outline: none;
+  cursor: pointer;
+}
+
+.timeline-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--mars-accent);
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 0 6px var(--mars-accent);
+}
+
+.timeline-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  color: var(--text-muted);
+}
+
+.timeline-btn-col {
+  display: flex;
+  gap: 6px;
+}
+
+.timeline-play-btn, .timeline-focus-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 5px 8px;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.timeline-play-btn:hover, .timeline-focus-btn:hover {
+  background-color: var(--mars-accent);
+  color: #ffffff;
+  border-color: var(--mars-accent);
+}
+
+/* Rover Waypoints & Markers */
+.rover-landing-icon .landing-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--panel-primary);
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.rover-waypoint-icon .wpt-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  transition: transform 0.15s ease;
+}
+
+.rover-waypoint-icon:hover .wpt-dot {
+  transform: scale(1.4);
+}
+
+.active-rover-head {
+  animation: rover-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes rover-pulse {
+  0% { transform: scale(1); box-shadow: 0 0 4px #ffffff; }
+  50% { transform: scale(1.3); box-shadow: 0 0 12px var(--mars-accent); }
+  100% { transform: scale(1); box-shadow: 0 0 4px #ffffff; }
+}
+
+.rover-waypoint-popup {
+  padding: 8px 10px;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  max-width: 260px;
+}
+
+.rover-waypoint-popup .popup-badge {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.rover-waypoint-popup h4 {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.rover-waypoint-popup .popup-date,
+.rover-waypoint-popup .popup-coord,
+.rover-waypoint-popup .popup-odom {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.rover-waypoint-popup .popup-obs {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  margin: 6px 0;
+  line-height: 1.35;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 6px;
+}
+
+.rover-waypoint-popup .popup-source {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+}
+
+
+/* Drawer Toggles for Terrain Intelligence & Rovers */
+.drawer-section-title {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--mars-accent);
+  margin-top: 14px;
+  margin-bottom: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  text-transform: uppercase;
+}
+
+.terrain-toggles-list,
+.rover-toggles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.drawer-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--panel-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xs);
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+.drawer-checkbox-item:hover {
+  background-color: var(--panel-hover);
+  border-color: var(--border-hover);
+}
+
+.drawer-checkbox-item input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--mars-accent);
+}
+
+.chk-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chk-label {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  color: var(--text-primary);
+  flex: 1;
 }

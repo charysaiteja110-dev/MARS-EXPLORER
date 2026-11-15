@@ -544,7 +544,13 @@
         className: 'mars-custom-popup'
       });
 
-      marker.on('click', () => {
+      marker.on('click', (e) => {
+        if (window.MarsApp && window.MarsApp.measureActive) {
+          L.DomEvent.stopPropagation(e);
+          marker.closePopup();
+          window.MarsApp.handleMeasureClick(item.lat, item.lng);
+          return;
+        }
         if (typeof this.onSelect === 'function') {
           this.onSelect(item);
         }

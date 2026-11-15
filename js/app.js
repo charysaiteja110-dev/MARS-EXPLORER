@@ -49,6 +49,16 @@
       // 5. Initialize Measurement Layer
       this.measureLayer = L.layerGroup().addTo(map);
 
+      // 5b. Initialize Mars Terrain Intelligence Subsystem
+      if (window.TerrainEngine) {
+        window.TerrainEngine.init(map);
+      }
+
+      // 5c. Initialize Historical Rover Routes Subsystem
+      if (window.RoverRoutesEngine) {
+        window.RoverRoutesEngine.init(map);
+      }
+
       // 6. Connect Map Telemetry Callbacks to UI
       this.bindTelemetryCallbacks();
 
@@ -106,92 +116,251 @@
     },
 
     /**
-     * Mars Geodesic Distance Tool
+     * =========================================================================
+     * MARS GEODESIC DISTANCE MEASUREMENT ENGINE (IAU 2015/2018 MODEL)
+     * R = 3,389,500 m (3,389.5 km)
+     * Multi-point path, segment distance, undo, finish, and clear controls
+     * =========================================================================
      */
+    measureActive: false,
+    measureFinished: false,
+    measurePoints: [],
+
     toggleMeasure: function () {
-      this.measureActive = !this.measureActive;
+      if (this.measureActive) {
+        this.exitMeasure();
+      } else {
+        this.startMeasure();
+      }
+    },
+
+    startMeasure: function () {
+      this.measureActive = true;
+      this.measureFinished = false;
       this.clearMeasure();
 
       const dom = MarsUIControls.dom;
-      if (this.measureActive) {
-        if (dom.toggleMeasureBtn) dom.toggleMeasureBtn.classList.add('active');
-        if (dom.measureHud) dom.measureHud.classList.add('active');
-        if (dom.measurePointsHint) dom.measurePointsHint.textContent = 'CLICK 1ST POINT ON MARS SURFACE';
-        if (dom.measureDistanceVal) dom.measureDistanceVal.innerHTML = '0.0 <span class="measure-unit">KM</span>';
-        document.getElementById('mars-map').style.cursor = 'crosshair';
-      } else {
-        if (dom.toggleMeasureBtn) dom.toggleMeasureBtn.classList.remove('active');
-        if (dom.measureHud) dom.measureHud.classList.remove('active');
-        document.getElementById('mars-map').style.cursor = '';
+      if (dom.toggleMeasureBtn) dom.toggleMeasureBtn.classList.add('active');
+      if (dom.measureHud) dom.measureHud.classList.add('active');
+
+      const mapEl = document.getElementById('mars-map');
+      if (mapEl) mapEl.style.cursor = 'crosshair';
+
+      // Disable double click zoom during measurement so double-clicking adds points without zooming
+      if (MarsMapEngine.map && MarsMapEngine.map.doubleClickZoom) {
+        MarsMapEngine.map.doubleClickZoom.disable();
+      }
+    },
+
+    exitMeasure: function () {
+      this.measureActive = false;
+      this.measureFinished = false;
+      this.clearMeasure();
+
+      const dom = MarsUIControls.dom;
+      if (dom.toggleMeasureBtn) dom.toggleMeasureBtn.classList.remove('active');
+      if (dom.measureHud) dom.measureHud.classList.remove('active');
+
+      const mapEl = document.getElementById('mars-map');
+      if (mapEl) mapEl.style.cursor = '';
+
+      // Re-enable double click zoom
+      if (MarsMapEngine.map && MarsMapEngine.map.doubleClickZoom) {
+        MarsMapEngine.map.doubleClickZoom.enable();
       }
     },
 
     handleMeasureClick: function (lat, lng) {
       if (!this.measureActive) return;
 
-      this.measurePoints.push({ lat, lng });
+      // Normalize longitude to [-180, 180] and latitude to Web Mercator bounds
+      const normLng = ((((lng + 180) % 360) + 360) % 360) - 180;
+      const normLat = Math.max(-85.0511, Math.min(85.0511, lat));
 
-      // Add point marker
-      const ptIcon = L.divIcon({
-        className: 'measure-pt-icon',
-        html: '<div style="width:10px;height:10px;background:#ff784e;border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px #e25c34;"></div>',
-        iconSize: [10, 10],
-        iconAnchor: [5, 5]
-      });
+      // If user previously finished the measurement, clicking on the map restarts a fresh path
+      if (this.measureFinished) {
+        this.clearMeasure();
+      }
 
-      const marker = L.marker([lat, lng], { icon: ptIcon });
-      this.measureLayer.addLayer(marker);
-
-      const dom = MarsUIControls.dom;
-      if (this.measurePoints.length === 1) {
-        if (dom.measurePointsHint) {
-          const pt1Str = MarsMapEngine.formatCoords(lat, lng, 1);
-          dom.measurePointsHint.textContent = `POINT 1 SET: ${pt1Str}. CLICK 2ND POINT.`;
+      // Prevent accidental jitter or duplicate clicks within 5 meters of previous point
+      if (this.measurePoints.length > 0) {
+        const last = this.measurePoints[this.measurePoints.length - 1];
+        const distToLast = MarsMapEngine.calculateMarsDistanceMeters(last.lat, last.lng, normLat, normLng);
+        if (distToLast < 5) {
+          return;
         }
-      } else if (this.measurePoints.length === 2) {
-        const p1 = this.measurePoints[0];
-        const p2 = this.measurePoints[1];
+      }
 
-        // Draw geodesic line
-        const polyline = L.polyline([
-          [p1.lat, p1.lng],
-          [p2.lat, p2.lng]
-        ], {
+      this.measurePoints.push({ lat: normLat, lng: normLng });
+      this.renderMeasureVisuals();
+      this.updateMeasureHUD();
+    },
+
+    renderMeasureVisuals: function () {
+      if (!this.measureLayer) return;
+      this.measureLayer.clearLayers();
+
+      const pts = this.measurePoints;
+      if (pts.length === 0) return;
+
+      // 1. Draw High-Contrast Path Polylines (outer contrast border + inner dashed line)
+      if (pts.length >= 2) {
+        const latlngs = pts.map(p => [p.lat, p.lng]);
+
+        const shadowLine = L.polyline(latlngs, {
+          color: '#000000',
+          weight: 6,
+          opacity: 0.7,
+          lineCap: 'round',
+          lineJoin: 'round',
+          interactive: false
+        });
+        this.measureLayer.addLayer(shadowLine);
+
+        const mainLine = L.polyline(latlngs, {
           color: '#ff784e',
           weight: 3,
           dashArray: '6, 6',
-          opacity: 0.95
+          opacity: 1.0,
+          lineCap: 'round',
+          lineJoin: 'round',
+          interactive: false
         });
-        this.measureLayer.addLayer(polyline);
-
-        // Calculate Great Circle Distance on Mars Spheroid (Radius = 3389.5 km)
-        const distKm = MarsMapEngine.calculateMarsDistanceKm(p1.lat, p1.lng, p2.lat, p2.lng);
-
-        if (dom.measureDistanceVal) {
-          dom.measureDistanceVal.innerHTML = `${distKm.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} <span class="measure-unit">KM</span>`;
-        }
-        if (dom.measurePointsHint) {
-          dom.measurePointsHint.textContent = `MARS SPHEROID DISTANCE (R=3,389.5 KM)`;
-        }
-      } else {
-        // Reset and start new measurement
-        this.clearMeasure();
-        this.handleMeasureClick(lat, lng);
+        this.measureLayer.addLayer(mainLine);
       }
+
+      // 2. Draw Waypoint Numbered Markers
+      pts.forEach((p, idx) => {
+        const isStart = idx === 0;
+        const isLast = idx === pts.length - 1 && !this.measureFinished;
+
+        let pillClass = 'm-point-pill';
+        if (isStart) pillClass += ' start';
+        else if (isLast) pillClass += ' current';
+
+        const iconHtml = `
+          <div class="${pillClass}">
+            ${idx + 1}
+            ${isLast ? '<span class="m-point-pulse"></span>' : ''}
+          </div>
+        `;
+
+        const icon = L.divIcon({
+          className: 'measure-marker-icon',
+          html: iconHtml,
+          iconSize: [22, 22],
+          iconAnchor: [11, 11]
+        });
+
+        const marker = L.marker([p.lat, p.lng], {
+          icon: icon,
+          interactive: true
+        });
+
+        // Tooltip displaying coordinates and segment distance
+        let tooltip = `<strong>Point ${idx + 1}</strong>: ${MarsMapEngine.formatCoords(p.lat, p.lng, 2)}`;
+        if (idx > 0) {
+          const segMeters = MarsMapEngine.calculateMarsDistanceMeters(pts[idx - 1].lat, pts[idx - 1].lng, p.lat, p.lng);
+          const segFmt = MarsMapEngine.formatDistanceUnit(segMeters);
+          tooltip += `<br>Segment: <strong>${segFmt.text}</strong>`;
+        }
+        marker.bindTooltip(tooltip, { className: 'custom-leaflet-tooltip' });
+
+        this.measureLayer.addLayer(marker);
+      });
+    },
+
+    updateMeasureHUD: function () {
+      const dom = MarsUIControls.dom;
+      const pts = this.measurePoints;
+
+      // Calculate total cumulative distance and latest segment distance
+      let totalMeters = 0;
+      let lastSegMeters = 0;
+
+      for (let i = 1; i < pts.length; i++) {
+        const seg = MarsMapEngine.calculateMarsDistanceMeters(pts[i - 1].lat, pts[i - 1].lng, pts[i].lat, pts[i].lng);
+        totalMeters += seg;
+        if (i === pts.length - 1) {
+          lastSegMeters = seg;
+        }
+      }
+
+      const totalFmt = MarsMapEngine.formatDistanceUnit(totalMeters);
+      const segFmt = pts.length >= 2 ? MarsMapEngine.formatDistanceUnit(lastSegMeters) : null;
+
+      // Update Total Distance Readout
+      if (dom.measureDistanceVal) {
+        dom.measureDistanceVal.innerHTML = `${totalFmt.value} <span class="m-unit">${totalFmt.unit}</span>`;
+      }
+
+      // Update Segment Distance Readout
+      if (dom.measureSegmentVal) {
+        dom.measureSegmentVal.textContent = segFmt ? `${segFmt.value} ${segFmt.unit}` : '—';
+      }
+
+      // Update Point Count
+      if (dom.measureCountVal) {
+        dom.measureCountVal.textContent = `${pts.length} pt${pts.length === 1 ? '' : 's'}`;
+      }
+
+      // Update Status Badge
+      if (dom.measureStatusBadge) {
+        if (this.measureFinished) {
+          dom.measureStatusBadge.className = 'm-status-badge finished';
+          dom.measureStatusBadge.textContent = 'FINISHED';
+        } else if (pts.length > 0) {
+          dom.measureStatusBadge.className = 'm-status-badge active';
+          dom.measureStatusBadge.textContent = `POINT ${pts.length}`;
+        } else {
+          dom.measureStatusBadge.className = 'm-status-badge';
+          dom.measureStatusBadge.textContent = 'READY';
+        }
+      }
+
+      // Update Guidance Hint
+      if (dom.measurePointsHint) {
+        if (this.measureFinished) {
+          dom.measurePointsHint.textContent = `PATH COMPLETE (${pts.length} WAYPOINTS). CLICK 'CLEAR' OR 'EXIT'.`;
+        } else if (pts.length === 0) {
+          dom.measurePointsHint.textContent = 'CLICK ON MARS SURFACE TO SET FIRST POINT';
+        } else if (pts.length === 1) {
+          const p1Str = MarsMapEngine.formatCoords(pts[0].lat, pts[0].lng, 1);
+          dom.measurePointsHint.textContent = `POINT 1 SET: ${p1Str}. CLICK NEXT TARGET.`;
+        } else {
+          dom.measurePointsHint.textContent = `PATH ACTIVE (${pts.length} PTS). CLICK NEXT POINT, OR 'FINISH'.`;
+        }
+      }
+    },
+
+    undoLastPoint: function () {
+      if (!this.measureActive || this.measurePoints.length === 0) return;
+      this.measurePoints.pop();
+      this.measureFinished = false;
+      this.renderMeasureVisuals();
+      this.updateMeasureHUD();
+    },
+
+    finishMeasure: function () {
+      if (!this.measureActive) return;
+      if (this.measurePoints.length < 2) {
+        if (MarsUIControls.dom.measurePointsHint) {
+          MarsUIControls.dom.measurePointsHint.textContent = 'NEED AT LEAST 2 POINTS TO COMPLETE MEASUREMENT';
+        }
+        return;
+      }
+      this.measureFinished = true;
+      this.renderMeasureVisuals();
+      this.updateMeasureHUD();
     },
 
     clearMeasure: function () {
       this.measurePoints = [];
+      this.measureFinished = false;
       if (this.measureLayer) {
         this.measureLayer.clearLayers();
       }
-      const dom = MarsUIControls.dom;
-      if (dom.measureDistanceVal) {
-        dom.measureDistanceVal.innerHTML = '0.0 <span class="measure-unit">KM</span>';
-      }
-      if (dom.measurePointsHint) {
-        dom.measurePointsHint.textContent = 'CLICK 1ST POINT ON MARS SURFACE';
-      }
+      this.updateMeasureHUD();
     },
 
     /**

@@ -64,9 +64,14 @@
 
         // Geodesic Measure HUD
         measureHud: document.getElementById('measure-hud'),
+        measureStatusBadge: document.getElementById('measure-status-badge'),
         measureDistanceVal: document.getElementById('measure-distance-val'),
+        measureSegmentVal: document.getElementById('measure-segment-val'),
+        measureCountVal: document.getElementById('measure-count-val'),
         measurePointsHint: document.getElementById('measure-points-hint'),
+        measureUndoBtn: document.getElementById('measure-undo-btn'),
         measureClearBtn: document.getElementById('measure-clear-btn'),
+        measureFinishBtn: document.getElementById('measure-finish-btn'),
         measureCloseBtn: document.getElementById('measure-close-btn'),
 
         // Master Modal Container for Research Sections
@@ -1245,6 +1250,43 @@
         });
       }
 
+      // Terrain Intelligence Layer Toggles
+      const terrainToggles = [
+        { id: 'chk-terrain-slope', key: 'slope' },
+        { id: 'chk-terrain-rock', key: 'rock' },
+        { id: 'chk-terrain-sand', key: 'sand' },
+        { id: 'chk-terrain-surface', key: 'surface' },
+        { id: 'chk-terrain-unknown', key: 'unknown' }
+      ];
+      terrainToggles.forEach(t => {
+        const el = document.getElementById(t.id);
+        if (el) {
+          el.addEventListener('change', (e) => {
+            if (window.TerrainEngine) {
+              window.TerrainEngine.toggleLayerGroup(t.key, e.target.checked);
+            }
+          });
+        }
+      });
+
+      // Historical Rover Route Toggles
+      const roverToggles = [
+        { id: 'chk-rover-perseverance', key: 'perseverance' },
+        { id: 'chk-rover-curiosity', key: 'curiosity' },
+        { id: 'chk-rover-opportunity', key: 'opportunity' },
+        { id: 'chk-rover-spirit', key: 'spirit' }
+      ];
+      roverToggles.forEach(r => {
+        const el = document.getElementById(r.id);
+        if (el) {
+          el.addEventListener('change', (e) => {
+            if (window.RoverRoutesEngine) {
+              window.RoverRoutesEngine.toggleRoverRoute(r.key, e.target.checked);
+            }
+          });
+        }
+      });
+
       // Landmark Quick Jump Dropdown
       if (this.dom.landmarkSelect) {
         this.dom.landmarkSelect.addEventListener('change', (e) => {
@@ -1263,14 +1305,24 @@
           if (window.MarsApp && window.MarsApp.toggleMeasure) window.MarsApp.toggleMeasure();
         });
       }
-      if (this.dom.measureCloseBtn) {
-        this.dom.measureCloseBtn.addEventListener('click', () => {
-          if (window.MarsApp && window.MarsApp.toggleMeasure) window.MarsApp.toggleMeasure();
+      if (this.dom.measureUndoBtn) {
+        this.dom.measureUndoBtn.addEventListener('click', () => {
+          if (window.MarsApp && window.MarsApp.undoLastPoint) window.MarsApp.undoLastPoint();
         });
       }
       if (this.dom.measureClearBtn) {
         this.dom.measureClearBtn.addEventListener('click', () => {
           if (window.MarsApp && window.MarsApp.clearMeasure) window.MarsApp.clearMeasure();
+        });
+      }
+      if (this.dom.measureFinishBtn) {
+        this.dom.measureFinishBtn.addEventListener('click', () => {
+          if (window.MarsApp && window.MarsApp.finishMeasure) window.MarsApp.finishMeasure();
+        });
+      }
+      if (this.dom.measureCloseBtn) {
+        this.dom.measureCloseBtn.addEventListener('click', () => {
+          if (window.MarsApp && window.MarsApp.exitMeasure) window.MarsApp.exitMeasure();
         });
       }
 
@@ -1525,7 +1577,16 @@
         case 'd':
           if (this.dom.toggleMeasureBtn) this.dom.toggleMeasureBtn.click();
           break;
+        case 'z':
+          if (e.ctrlKey && window.MarsApp && window.MarsApp.undoLastPoint) {
+            e.preventDefault();
+            window.MarsApp.undoLastPoint();
+          }
+          break;
         case 'escape':
+          if (window.MarsApp && window.MarsApp.measureActive) {
+            window.MarsApp.exitMeasure();
+          }
           this.closeLandmarkDrawer();
           this.closeModal();
           if (this.dom.mapLayerDrawer) this.dom.mapLayerDrawer.classList.remove('open');

@@ -143,9 +143,22 @@
     },
 
     /**
-     * Calculate Great Circle Distance on Mars Spheroid using Haversine formula
+     * Calculate Great Circle Geodesic Distance on Mars Spheroid using Haversine formula
+     * Planetary Model: IAU/IAG 2015/2018 Recommended Mars Mean Volumetric Radius
+     * R = 3,389.5 km = 3,389,500 meters
+     *
+     * Formula:
+     *   deltaPhi = toRad(lat2 - lat1)
+     *   deltaLambda = toRad(lon2 - lon1)
+     *   a = sin^2(deltaPhi / 2) + cos(phi1) * cos(phi2) * sin^2(deltaLambda / 2)
+     *   c = 2 * atan2(sqrt(a), sqrt(1 - a))
+     *   d = R * c
      */
-    calculateMarsDistanceKm: function (lat1, lon1, lat2, lon2) {
+    calculateMarsDistanceMeters: function (lat1, lon1, lat2, lon2) {
+      if (lat1 === null || lon1 === null || lat2 === null || lon2 === null) return 0;
+      if (lat1 === lat2 && lon1 === lon2) return 0;
+
+      const MARS_RADIUS_METERS = 3389500;
       const toRad = deg => (deg * Math.PI) / 180;
       const phi1 = toRad(lat1);
       const phi2 = toRad(lat2);
@@ -157,8 +170,34 @@
         Math.cos(phi1) * Math.cos(phi2) *
         Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
 
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return MARS_RADIUS_KM * c;
+      const clampedA = Math.min(1, Math.max(0, a));
+      const c = 2 * Math.atan2(Math.sqrt(clampedA), Math.sqrt(1 - clampedA));
+      return MARS_RADIUS_METERS * c;
+    },
+
+    calculateMarsDistanceKm: function (lat1, lon1, lat2, lon2) {
+      return this.calculateMarsDistanceMeters(lat1, lon1, lat2, lon2) / 1000;
+    },
+
+    formatDistanceUnit: function (meters) {
+      if (meters === null || meters === undefined || isNaN(meters)) {
+        return { value: '0.0', unit: 'M', text: '0.0 m' };
+      }
+      if (meters < 1000) {
+        return {
+          value: meters.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
+          unit: 'M',
+          text: `${meters.toFixed(1)} m`
+        };
+      } else {
+        const km = meters / 1000;
+        const decimals = km < 100 ? 2 : 1;
+        return {
+          value: km.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }),
+          unit: 'KM',
+          text: `${km.toFixed(decimals)} km`
+        };
+      }
     },
 
     /**

@@ -316,18 +316,41 @@
         <!-- Floating Spheroid Distance Measurement HUD -->
         <div id="measure-hud" class="measure-hud-card" role="region" aria-label="Geodesic Distance Measure">
           <div class="m-card-header">
-            <span class="m-title">Mars Spheroid Distance</span>
-            <span class="m-sub">R = 3,389.5 km</span>
+            <div class="m-header-left">
+              <span class="m-title">MARS DISTANCE MEASURE</span>
+              <span id="measure-status-badge" class="m-status-badge">READY</span>
+            </div>
+            <span class="m-sub">IAU MARS R = 3,389.5 km</span>
           </div>
-          <div id="measure-distance-val" class="m-result">
-            0.0 <span class="m-unit">KM</span>
+
+          <div class="m-readout-grid">
+            <div class="m-readout-main">
+              <span class="m-readout-lbl">TOTAL PATH DISTANCE</span>
+              <div id="measure-distance-val" class="m-result">
+                0.0 <span class="m-unit">M</span>
+              </div>
+            </div>
+            <div class="m-readout-secondary">
+              <div class="m-sub-stat">
+                <span class="m-stat-lbl">LAST SEGMENT:</span>
+                <span id="measure-segment-val" class="m-stat-val">—</span>
+              </div>
+              <div class="m-sub-stat">
+                <span class="m-stat-lbl">WAYPOINTS:</span>
+                <span id="measure-count-val" class="m-stat-val">0 pts</span>
+              </div>
+            </div>
           </div>
+
           <div id="measure-points-hint" class="m-hint">
-            CLICK 1ST POINT ON MARS SURFACE
+            CLICK ON MARS SURFACE TO SET FIRST POINT
           </div>
+
           <div class="m-actions">
-            <button id="measure-clear-btn" class="m-btn">Clear</button>
-            <button id="measure-close-btn" class="m-btn primary">Done</button>
+            <button id="measure-undo-btn" class="m-btn" title="Undo latest waypoint (Ctrl+Z)">Undo</button>
+            <button id="measure-clear-btn" class="m-btn" title="Clear all points">Clear</button>
+            <button id="measure-finish-btn" class="m-btn" title="Finish measurement path">Finish</button>
+            <button id="measure-close-btn" class="m-btn primary" title="Exit measurement mode (Hotkey: D)">Exit</button>
           </div>
         </div>
 
@@ -469,6 +492,61 @@
                 <button class="opacity-preset-btn active" data-opacity="1.0">100%</button>
               </div>
             </div>
+
+            <!-- Scientific Terrain Intelligence Overlays -->
+            <div class="drawer-section-title">TERRAIN INTELLIGENCE LAYERS</div>
+            <div class="terrain-toggles-list">
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-terrain-slope" checked>
+                <span class="chk-indicator" style="background:#22c55e;"></span>
+                <span class="chk-label">Slope Gradient (0°–90°)</span>
+              </label>
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-terrain-rock" checked>
+                <span class="chk-indicator" style="background:#818cf8;"></span>
+                <span class="chk-label">Rock Abundance (THEMIS CFA)</span>
+              </label>
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-terrain-sand" checked>
+                <span class="chk-indicator" style="background:#fb923c;"></span>
+                <span class="chk-label">Sand &amp; Dune Hazard Traps</span>
+              </label>
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-terrain-surface" checked>
+                <span class="chk-indicator" style="background:#34d399;"></span>
+                <span class="chk-label">Geological Surface Units</span>
+              </label>
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-terrain-unknown" checked>
+                <span class="chk-indicator" style="background:#64748b;"></span>
+                <span class="chk-label">Unknown / No Data Zones</span>
+              </label>
+            </div>
+
+            <!-- Historical Rover Exploration Routes -->
+            <div class="drawer-section-title">HISTORICAL ROVER ROUTES</div>
+            <div class="rover-toggles-list">
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-rover-perseverance" checked>
+                <span class="chk-indicator" style="background:#38bdf8;"></span>
+                <span class="chk-label">Perseverance (Jezero • 28.3 km)</span>
+              </label>
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-rover-curiosity" checked>
+                <span class="chk-indicator" style="background:#e05a47;"></span>
+                <span class="chk-label">Curiosity (Gale • 32.5 km)</span>
+              </label>
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-rover-opportunity" checked>
+                <span class="chk-indicator" style="background:#f59e0b;"></span>
+                <span class="chk-label">Opportunity (Meridiani • 45.16 km)</span>
+              </label>
+              <label class="drawer-checkbox-item">
+                <input type="checkbox" id="chk-rover-spirit" checked>
+                <span class="chk-indicator" style="background:#10b981;"></span>
+                <span class="chk-label">Spirit (Gusev / Troy • 7.73 km)</span>
+              </label>
+            </div>
           </div>
         </aside>
 
@@ -593,6 +671,10 @@
 
   <!-- Modular Scripts -->
   <script src="js/spirit-data.js"></script>
+  <script src="js/rover-routes-data.js"></script>
+  <script src="js/rover-routes-engine.js"></script>
+  <script src="js/terrain-intelligence-data.js"></script>
+  <script src="js/terrain-engine.js"></script>
   <script src="js/locations.js"></script>
   <script src="js/layers.js"></script>
   <script src="js/map.js"></script>

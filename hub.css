@@ -1,0 +1,232 @@
+/* ==========================================================================
+   MEMBER 5: NASA xEMU & MEDA-RAD TELEMETRY HUD
+   Styled to match MARS EXPLORER COMMAND CENTER (Dark Charcoal + Amber/Orange)
+   ========================================================================== */
+
+#nasa-member5-hud {
+  position: fixed;
+  bottom: 44px;
+  right: 16px;
+  z-index: 9999;
+  width: 360px;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+  background: rgba(16, 14, 12, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-top: 3px solid #f59e0b;
+  border-radius: 6px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9);
+  color: #f3f4f6;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  padding: 14px 16px;
+  display: none;
+}
+
+#nasa-member5-hud.hud-visible {
+  display: block;
+  animation: m5SlideIn 0.22s ease-out;
+}
+
+@keyframes m5SlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#nasa-member5-hud.hud-caution {
+  border-color: #f59e0b;
+  border-top-color: #f59e0b;
+}
+
+#nasa-member5-hud.hud-danger {
+  border-color: #ef4444;
+  border-top-color: #ef4444;
+}
+
+.m5-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 9px;
+  margin-bottom: 10px;
+}
+
+.m5-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.m5-kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #f59e0b;
+}
+
+.m5-location-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.m5-coords {
+  font-size: 11px;
+  color: #a8a29e;
+  font-family: monospace;
+}
+
+.m5-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #e7e5e4;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.m5-close-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.m5-margin-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(28, 25, 23, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 5px;
+  padding: 8px 11px;
+  margin-bottom: 11px;
+}
+
+.m5-margin-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #a8a29e;
+  text-transform: uppercase;
+}
+
+.m5-margin-sub {
+  font-size: 10.5px;
+  color: #d6d3d1;
+  margin-top: 2px;
+}
+
+.m5-margin-time {
+  font-size: 20px;
+  font-weight: 800;
+  color: #10b981;
+  font-family: monospace;
+}
+
+.m5-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #f59e0b;
+  margin-bottom: 7px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.m5-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-bottom: 9px;
+}
+
+.m5-stat-box {
+  background: rgba(28, 25, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  padding: 7px 9px;
+}
+
+.m5-stat-label {
+  font-size: 9.5px;
+  color: #a8a29e;
+  margin-bottom: 2px;
+}
+
+.m5-stat-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: monospace;
+}
+
+.m5-stat-unit {
+  font-size: 10.5px;
+  color: #a8a29e;
+}
+
+.m5-dust-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(28, 25, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  padding: 7px 9px;
+  margin-bottom: 12px;
+}
+
+.m5-badge {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.m5-badge-safe { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.m5-badge-caution { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.5); }
+.m5-badge-danger { background: rgba(239, 68, 68, 0.25); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.65); }
+
+.m5-bar-group {
+  margin-bottom: 8px;
+}
+
+.m5-bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 3px;
+  color: #e7e5e4;
+}
+
+.m5-bar-track {
+  width: 100%;
+  height: 6px;
+  background: #292524;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.m5-bar-fill {
+  height: 100%;
+  background: #10b981;
+  transition: width 0.35s ease, background-color 0.3s ease;
+}
+
+.m5-advisory {
+  margin-top: 10px;
+  background: rgba(245, 158, 11, 0.12);
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 4px 4px 0;
+  padding: 7px 9px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #f3f4f6;
+}

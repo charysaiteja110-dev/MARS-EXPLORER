@@ -1,9 +1,22 @@
-param (
-    [int]$Port = 8080,
-    [string]$Root = $PSScriptRoot
-)
+param([int]$Port = 8080)
 
-$server = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $Port)
+$listener = New-Object System.Net.HttpListener
+$prefix = "http://localhost:$Port/"
+$listener.Prefixes.Add($prefix)
+
+try {
+    $listener.Start()
+} catch {
+    $Port = 8085
+    $prefix = "http://localhost:$Port/"
+    $listener.Prefixes.Clear()
+    $listener.Prefixes.Add($prefix)
+    $listener.Start()
+}
+
+Write-Output "Mars Explorer server running at $prefix"
+
+$baseDir = $PSScriptRoot
 
 $mimeTypes = @{
     ".html" = "text/html; charset=utf-8"
@@ -14,86 +27,48 @@ $mimeTypes = @{
     ".png"  = "image/png"
     ".jpg"  = "image/jpeg"
     ".jpeg" = "image/jpeg"
+    ".gif"  = "image/gif"
     ".svg"  = "image/svg+xml"
     ".ico"  = "image/x-icon"
-    ".woff" = "font/woff"
-    ".woff2"= "font/woff2"
-    ".ttf"  = "font/ttf"
 }
 
-try {
-    $server.Start()
-    Write-Host "MARS EXPLORER HTTP Server running at http://localhost:$Port/"
-    Write-Host "Serving files from: $Root"
+while ($listener.IsListening) {
+    try {
+        $context = $listener.GetContext()
+        $request = $context.Request
+        $response = $context.Response
 
-    while ($true) {
-        $client = $server.AcceptTcpClient()
-        try {
-            $stream = $client.GetStream()
-            $reader = [System.IO.StreamReader]::new($stream, [System.Text.Encoding]::ASCII)
-            $requestLine = $reader.ReadLine()
-
-            if ([string]::IsNullOrEmpty($requestLine)) {
-                $client.Close()
-                continue
-            }
-
-            # Parse HTTP method and target path
-            $parts = $requestLine.Split(' ')
-            if ($parts.Length -lt 2) {
-                $client.Close()
-                continue
-            }
-
-            $method = $parts[0]
-            $url = $parts[1].Split('?')[0].TrimStart('/')
-            if ([string]::IsNullOrWhiteSpace($url)) {
-                $url = "index.html"
-            }
-
-            # Prevent directory traversal
-            $safePath = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($Root, $url))
-            if (-not $safePath.StartsWith($Root, [System.StringComparison]::OrdinalIgnoreCase)) {
-                $body = [System.Text.Encoding]::UTF8.GetBytes("403 Forbidden")
-                $header = "HTTP/1.1 403 Forbidden`r`nContent-Length: $($body.Length)`r`nConnection: close`r`n`r`n"
-                $hBytes = [System.Text.Encoding]::ASCII.GetBytes($header)
-                $stream.Write($hBytes, 0, $hBytes.Length)
-                $stream.Write($body, 0, $body.Length)
-                $stream.Flush()
-                $client.Close()
-                continue
-            }
-
-            if (Test-Path $safePath -PathType Leaf) {
-                $ext = [System.IO.Path]::GetExtension($safePath).ToLower()
-                $mime = if ($mimeTypes.ContainsKey($ext)) { $mimeTypes[$ext] } else { "application/octet-stream" }
-                $bytes = [System.IO.File]::ReadAllBytes($safePath)
-
-                $header = "HTTP/1.1 200 OK`r`n" +
-                          "Content-Type: $mime`r`n" +
-                          "Content-Length: $($bytes.Length)`r`n" +
-                          "Access-Control-Allow-Origin: *`r`n" +
-                          "Cache-Control: no-cache`r`n" +
-                          "Connection: close`r`n`r`n"
-
-                $hBytes = [System.Text.Encoding]::ASCII.GetBytes($header)
-                $stream.Write($hBytes, 0, $hBytes.Length)
-                $stream.Write($bytes, 0, $bytes.Length)
-                $stream.Flush()
-            } else {
-                $body = [System.Text.Encoding]::UTF8.GetBytes("404 Not Found")
-                $header = "HTTP/1.1 404 Not Found`r`nContent-Length: $($body.Length)`r`nConnection: close`r`n`r`n"
-                $hBytes = [System.Text.Encoding]::ASCII.GetBytes($header)
-                $stream.Write($hBytes, 0, $hBytes.Length)
-                $stream.Write($body, 0, $body.Length)
-                $stream.Flush()
-            }
-        } catch {
-            # Ignore individual client stream disconnects
-        } finally {
-            $client.Close()
+        $urlPath = $request.Url.LocalPath
+        if ($urlPath -eq "/" -or [string]::IsNullOrEmpty($urlPath)) {
+            $urlPath = "/index.html"
         }
+
+        $relPath = $urlPath.TrimStart('/').Replace('/', [System.IO.Path]::DirectorySeparatorChar)
+        $filePath = [System.IO.Path]::Combine($baseDir, $relPath)
+
+        if ([System.IO.File]::Exists($filePath)) {
+            $ext = [System.IO.Path]::GetExtension($filePath).ToLower()
+            $contentType = "application/octet-stream"
+            if ($mimeTypes.ContainsKey($ext)) {
+                $contentType = $mimeTypes[$ext]
+            }
+
+            $response.ContentType = $contentType
+            $response.AddHeader("Access-Control-Allow-Origin", "*")
+            $response.StatusCode = 200
+
+            $bytes = [System.IO.File]::ReadAllBytes($filePath)
+            $response.ContentLength64 = $bytes.Length
+            $response.OutputStream.Write($bytes, 0, $bytes.Length)
+        } else {
+            $response.StatusCode = 404
+            $msg = [System.Text.Encoding]::UTF8.GetBytes("404 Not Found")
+            $response.ContentLength64 = $msg.Length
+            $response.OutputStream.Write($msg, 0, $msg.Length)
+        }
+        $response.OutputStream.Close()
+    } catch {
+        # Continue loop on connection reset
     }
-} finally {
-    $server.Stop()
 }
+

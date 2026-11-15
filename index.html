@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="MARS EXPLORER COMMAND CENTER — Global Mars Cartography, NASA MER Spirit Mission Research & Traversability Hazard Analysis System (JPL D-92756)">
+  <meta name="description"
+    content="MARS EXPLORER COMMAND CENTER — Global Mars Cartography, NASA MER Spirit Mission Research & Traversability Hazard Analysis System (JPL D-92756)">
   <meta name="theme-color" content="#100F0F">
   <title>MARS EXPLORER COMMAND CENTER // Global Mapping & NASA Spirit Mission Research</title>
 
   <!-- Google Fonts: Inter / Rajdhani / Space Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
 
   <!-- Leaflet CSS (Local Vendor) -->
   <link rel="stylesheet" href="vendor/leaflet.css">
@@ -18,6 +22,7 @@
   <!-- Command Center Primary Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
   <!-- ====================================================================
@@ -42,7 +47,8 @@
           <div class="mission-name">MARS EXPLORER</div>
           <div class="mission-sub">COMMAND CENTER // JPL D-92756</div>
         </div>
-        <button id="sidebar-toggle-btn" class="sidebar-collapse-btn" title="Toggle Sidebar Width" aria-label="Collapse Sidebar">
+        <button id="sidebar-toggle-btn" class="sidebar-collapse-btn" title="Toggle Sidebar Width"
+          aria-label="Collapse Sidebar">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
@@ -142,7 +148,9 @@
         <button class="nav-item" data-nav="settings" aria-label="Settings & Transparency">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
           </svg>
           <span class="nav-label">9. Settings</span>
         </button>
@@ -210,7 +218,8 @@
           </div>
 
           <!-- Quick Action Buttons -->
-          <button id="toggle-measure-btn" class="cmd-btn" title="Measure Mars Distance (Hotkey: D)" aria-label="Measure Distance">
+          <button id="toggle-measure-btn" class="cmd-btn" title="Measure Mars Distance (Hotkey: D)"
+            aria-label="Measure Distance">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M2 12h20"></path>
               <path d="M6 8v8"></path>
@@ -220,7 +229,8 @@
             <span>Measure</span>
           </button>
 
-          <button id="btn-reset-view-top" class="cmd-btn" title="Reset Global Map View (Hotkey: R)" aria-label="Reset Global View">
+          <button id="btn-reset-view-top" class="cmd-btn" title="Reset Global Map View (Hotkey: R)"
+            aria-label="Reset Global View">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="22" y1="12" x2="18" y2="12"></line>
@@ -231,7 +241,8 @@
             <span>Reset</span>
           </button>
 
-          <button id="top-fullscreen-btn" class="cmd-btn icon-only" title="Toggle Fullscreen (Hotkey: F)" aria-label="Fullscreen">
+          <button id="top-fullscreen-btn" class="cmd-btn icon-only" title="Toggle Fullscreen (Hotkey: F)"
+            aria-label="Fullscreen">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="15 3 21 3 21 9"></polyline>
               <polyline points="9 21 3 21 3 15"></polyline>
@@ -249,12 +260,14 @@
         <div id="mars-map" role="region" aria-label="Mars Interactive Global Surface Map"></div>
 
         <!-- In-Map Telemetry Buffering Screen Overlay -->
-        <div id="map-buffering-overlay" class="map-buffering-overlay" role="status" aria-live="polite" aria-label="Buffering Mars Telemetry">
+        <div id="map-buffering-overlay" class="map-buffering-overlay" role="status" aria-live="polite"
+          aria-label="Buffering Mars Telemetry">
           <div class="buffering-card">
             <div class="buffering-spinner">
               <svg viewBox="0 0 40 40" class="spinner-svg">
                 <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(216, 121, 50, 0.2)" stroke-width="3"></circle>
-                <circle cx="20" cy="20" r="16" fill="none" stroke="#D87932" stroke-width="3" stroke-dasharray="70" stroke-dashoffset="40" stroke-linecap="round"></circle>
+                <circle cx="20" cy="20" r="16" fill="none" stroke="#D87932" stroke-width="3" stroke-dasharray="70"
+                  stroke-dashoffset="40" stroke-linecap="round"></circle>
               </svg>
             </div>
             <div class="buffering-info">
@@ -355,14 +368,16 @@
         </div>
 
         <!-- Floating On-Map NASA Classification Systems HUD -->
-        <aside id="map-classification-hud" class="map-classification-hud" role="region" aria-label="NASA Classification Systems on Map">
+        <aside id="map-classification-hud" class="map-classification-hud" role="region"
+          aria-label="NASA Classification Systems on Map">
           <div class="class-hud-header">
             <div class="class-hud-titles">
               <span class="class-hud-tag">NASA MER SPIRIT // JPL D-92756</span>
               <h3 class="class-hud-title">NASA Planetary Classification</h3>
             </div>
             <div class="class-hud-header-actions">
-              <button id="class-hud-minimize-btn" class="class-hud-icon-btn" title="Toggle Compact / Expanded HUD" aria-label="Toggle Classification HUD">
+              <button id="class-hud-minimize-btn" class="class-hud-icon-btn" title="Toggle Compact / Expanded HUD"
+                aria-label="Toggle Classification HUD">
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="4 14 10 14 10 20"></polyline>
                   <polyline points="20 10 14 10 14 4"></polyline>
@@ -373,9 +388,12 @@
 
           <!-- HUD Mode Navigation Tabs -->
           <div class="class-hud-tabs" role="tablist">
-            <button class="class-hud-tab active" data-class-tab="fig62" role="tab" aria-selected="true">Fig 6.2 Terrains</button>
-            <button class="class-hud-tab" data-class-tab="mobility-risk" role="tab" aria-selected="false">Mobility Risk</button>
-            <button class="class-hud-tab" data-class-tab="slope-scale" role="tab" aria-selected="false">Slope Scale</button>
+            <button class="class-hud-tab active" data-class-tab="fig62" role="tab" aria-selected="true">Fig 6.2
+              Terrains</button>
+            <button class="class-hud-tab" data-class-tab="mobility-risk" role="tab" aria-selected="false">Mobility
+              Risk</button>
+            <button class="class-hud-tab" data-class-tab="slope-scale" role="tab" aria-selected="false">Slope
+              Scale</button>
           </div>
 
           <div class="class-hud-body">
@@ -385,7 +403,8 @@
                 <!-- Dynamically populated from controls.js -->
               </div>
               <div id="class-quick-detail" class="class-quick-detail">
-                <div class="detail-placeholder">&gt; Click any NASA terrain unit above to view slip rating &amp; hazard diagnostic.</div>
+                <div class="detail-placeholder">&gt; Click any NASA terrain unit above to view slip rating &amp; hazard
+                  diagnostic.</div>
               </div>
             </div>
 
@@ -396,14 +415,16 @@
                   <span class="risk-pill green">GREEN</span>
                   <div class="risk-item-text">
                     <strong>Trafficable (Lower Risk)</strong>
-                    <span>Slopes &lt;8° on bedrock/outcrop; wheel slip &lt;15%. Nominal torque &amp; high bearing.</span>
+                    <span>Slopes &lt;8° on bedrock/outcrop; wheel slip &lt;15%. Nominal torque &amp; high
+                      bearing.</span>
                   </div>
                 </div>
                 <div class="risk-item-row" data-risk="yellow">
                   <span class="risk-pill yellow">YELLOW</span>
                   <div class="risk-item-text">
                     <strong>Caution (Moderate Risk)</strong>
-                    <span>Slopes 8°–12°, soil with clasts, or gentle ripples. Controlled advance &amp; slip monitoring.</span>
+                    <span>Slopes 8°–12°, soil with clasts, or gentle ripples. Controlled advance &amp; slip
+                      monitoring.</span>
                   </div>
                 </div>
                 <div class="risk-item-row" data-risk="red">
@@ -431,15 +452,22 @@
                   <span class="stat-source">Chapter 6</span>
                 </div>
                 <div class="slope-strip">
-                  <div class="slope-step green" title="<0° Downhill"><span class="slope-deg">&lt;0°</span><span class="slope-lbl">Downhill</span></div>
-                  <div class="slope-step green" title="0°–4° Flat"><span class="slope-deg">0°–4°</span><span class="slope-lbl">Flat</span></div>
-                  <div class="slope-step green" title="4°–8° Gentle"><span class="slope-deg">4°–8°</span><span class="slope-lbl">Gentle</span></div>
-                  <div class="slope-step yellow" title="8°–12° Moderate"><span class="slope-deg">8°–12°</span><span class="slope-lbl">Caution</span></div>
-                  <div class="slope-step red" title="12°–16° Steep"><span class="slope-deg">12°–16°</span><span class="slope-lbl">Steep</span></div>
-                  <div class="slope-step red-dark" title=">16° Critical"><span class="slope-deg">&gt;16°</span><span class="slope-lbl">Critical</span></div>
+                  <div class="slope-step green" title="<0° Downhill"><span class="slope-deg">&lt;0°</span><span
+                      class="slope-lbl">Downhill</span></div>
+                  <div class="slope-step green" title="0°–4° Flat"><span class="slope-deg">0°–4°</span><span
+                      class="slope-lbl">Flat</span></div>
+                  <div class="slope-step green" title="4°–8° Gentle"><span class="slope-deg">4°–8°</span><span
+                      class="slope-lbl">Gentle</span></div>
+                  <div class="slope-step yellow" title="8°–12° Moderate"><span class="slope-deg">8°–12°</span><span
+                      class="slope-lbl">Caution</span></div>
+                  <div class="slope-step red" title="12°–16° Steep"><span class="slope-deg">12°–16°</span><span
+                      class="slope-lbl">Steep</span></div>
+                  <div class="slope-step red-dark" title=">16° Critical"><span class="slope-deg">&gt;16°</span><span
+                      class="slope-lbl">Critical</span></div>
                 </div>
                 <div class="slope-guidance-box">
-                  <strong>Standard Drive Limit:</strong> 12° nominal inclination. Spirit experienced critical 99.7% immobilization at Troy on a 12° south-facing slope due to loose sulfate sub-soil.
+                  <strong>Standard Drive Limit:</strong> 12° nominal inclination. Spirit experienced critical 99.7%
+                  immobilization at Troy on a 12° south-facing slope due to loose sulfate sub-soil.
                 </div>
               </div>
             </div>
@@ -447,11 +475,16 @@
 
           <!-- Bottom Action Bar on Map HUD -->
           <div class="class-hud-footer">
-            <button id="btn-focus-study-hud" class="hud-action-btn primary" title="Fly map directly to Gusev Crater / Home Plate case study">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="12 8 8 12 12 16 12 8"></polygon></svg>
+            <button id="btn-focus-study-hud" class="hud-action-btn primary"
+              title="Fly map directly to Gusev Crater / Home Plate case study">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="12 8 8 12 12 16 12 8"></polygon>
+              </svg>
               <span>Focus Home Plate</span>
             </button>
-            <button id="btn-toggle-polygons-hud" class="hud-action-btn active" title="Toggle Ground Classification Polygons on Map">
+            <button id="btn-toggle-polygons-hud" class="hud-action-btn active"
+              title="Toggle Ground Classification Polygons on Map">
               <span class="hud-indicator-dot"></span>
               <span>Polygons</span>
             </button>
@@ -483,7 +516,8 @@
                 <span>Active Layer Opacity</span>
                 <span id="opacity-value-display">100%</span>
               </div>
-              <input id="opacity-slider" type="range" min="0" max="1" step="0.05" value="1" class="slider-input" aria-label="Opacity Slider">
+              <input id="opacity-slider" type="range" min="0" max="1" step="0.05" value="1" class="slider-input"
+                aria-label="Opacity Slider">
               <div class="opacity-presets-row">
                 <button class="opacity-preset-btn" data-opacity="0">0%</button>
                 <button class="opacity-preset-btn" data-opacity="0.25">25%</button>
@@ -577,7 +611,8 @@
         </aside>
 
         <!-- C. Modal / Sliding Command Panels for Sections 3, 4, 5, 6, 7, 8, 9 -->
-        <div id="command-modal-container" class="command-modal-container" role="dialog" aria-modal="true" aria-hidden="true">
+        <div id="command-modal-container" class="command-modal-container" role="dialog" aria-modal="true"
+          aria-hidden="true">
           <div class="command-modal-box">
             <div class="modal-box-header">
               <div class="modal-header-titles">
@@ -639,17 +674,20 @@
   </div>
 
   <!-- Loading Experience Overlay -->
-  <div id="loading-overlay" class="loading-overlay" role="alert" aria-busy="true" aria-label="Initializing Mars Explorer Pro">
+  <div id="loading-overlay" class="loading-overlay" role="alert" aria-busy="true"
+    aria-label="Initializing Mars Explorer Pro">
     <div class="loading-card">
       <div class="loading-spinner">
         <svg viewBox="0 0 50 50" class="spinner-ring">
           <circle cx="25" cy="25" r="20" fill="none" stroke="rgba(216, 121, 50, 0.2)" stroke-width="3"></circle>
-          <circle cx="25" cy="25" r="20" fill="none" stroke="#D87932" stroke-width="3" stroke-dasharray="80" stroke-dashoffset="60" stroke-linecap="round"></circle>
+          <circle cx="25" cy="25" r="20" fill="none" stroke="#D87932" stroke-width="3" stroke-dasharray="80"
+            stroke-dashoffset="60" stroke-linecap="round"></circle>
         </svg>
       </div>
 
       <div class="loading-brand">MARS EXPLORER COMMAND CENTER</div>
-      <div id="loading-subtitle" class="loading-sub">BOOTSTRAPPING PLANETARY CARTOGRAPHY &amp; JPL MISSION REPOSITORY...</div>
+      <div id="loading-subtitle" class="loading-sub">BOOTSTRAPPING PLANETARY CARTOGRAPHY &amp; JPL MISSION REPOSITORY...
+      </div>
 
       <div class="loading-progress-track">
         <div id="loading-progress-fill" class="loading-progress-bar"></div>
@@ -679,6 +717,310 @@
   <script src="js/layers.js"></script>
   <script src="js/map.js"></script>
   <script src="js/controls.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/app.js"></script>wa
+  <!-- =========================================================================
+     MEMBER 5: NASA xEMU SUIT & MEDA-RAD TELEMETRY HUD (SELF-CONTAINED)
+     ========================================================================= -->
+<style>
+  #nasa-member5-hud {
+    position: fixed;
+    bottom: 44px;
+    left: 245px;
+    z-index: 99999;
+    width: 350px;
+    background: rgba(16, 14, 12, 0.96);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(245, 158, 11, 0.55);
+    border-top: 3px solid #f59e0b;
+    border-radius: 6px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9);
+    color: #f3f4f6;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 14px 16px;
+    display: block;
+  }
+  #nasa-member5-hud.hud-caution { border-color: #f59e0b; border-top-color: #f59e0b; }
+  #nasa-member5-hud.hud-danger { border-color: #ef4444; border-top-color: #ef4444; }
+  .m5-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 8px; margin-bottom: 10px; }
+  .m5-kicker { font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #f59e0b; display: block; }
+  .m5-location-name { font-size: 14px; font-weight: 700; color: #ffffff; display: block; margin-top: 2px; }
+  .m5-coords { font-size: 11px; color: #a8a29e; font-family: monospace; }
+  .m5-close-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-size: 15px; }
+  .m5-close-btn:hover { background: #ef4444; }
+  .m5-margin-card { display: flex; justify-content: space-between; align-items: center; background: #1c1917; border: 1px solid rgba(245,158,11,0.3); border-radius: 5px; padding: 8px 11px; margin-bottom: 10px; }
+  .m5-margin-label { font-size: 9.5px; font-weight: 700; color: #a8a29e; text-transform: uppercase; }
+  .m5-margin-sub { font-size: 10.5px; color: #d6d3d1; }
+  .m5-margin-time { font-size: 20px; font-weight: 800; color: #10b981; font-family: monospace; }
+  .m5-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #f59e0b; margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .m5-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 8px; }
+  .m5-stat-box { background: #1c1917; border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 7px 9px; }
+  .m5-stat-label { font-size: 9.5px; color: #a8a29e; margin-bottom: 2px; }
+  .m5-stat-value { font-size: 14.5px; font-weight: 700; color: #ffffff; font-family: monospace; }
+  .m5-stat-unit { font-size: 10px; color: #a8a29e; }
+  .m5-dust-strip { display: flex; justify-content: space-between; align-items: center; background: #1c1917; border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 7px 9px; margin-bottom: 10px; }
+  .m5-badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+  .m5-badge-safe { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); }
+  .m5-badge-caution { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.5); }
+  .m5-badge-danger { background: rgba(239,68,68,0.25); color: #f87171; border: 1px solid rgba(239,68,68,0.65); }
+  .m5-bar-group { margin-bottom: 7px; }
+  .m5-bar-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; color: #e7e5e4; }
+  .m5-bar-track { width: 100%; height: 6px; background: #292524; border-radius: 3px; overflow: hidden; }
+  .m5-bar-fill { height: 100%; background: #10b981; transition: width 0.3s ease; }
+  .m5-advisory { margin-top: 9px; background: rgba(245,158,11,0.12); border-left: 3px solid #f59e0b; padding: 7px 9px; font-size: 11px; line-height: 1.4; color: #f3f4f6; }
+  #m5-reopen-btn { position: fixed; bottom: 168px; left: 14px; z-index: 99999; background: #1c1917; color: #f59e0b; border: 1px solid #f59e0b; padding: 7px 12px; border-radius: 4px; font-weight: 700; font-size: 11px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.8); }
+  #m5-reopen-btn:hover { background: #f59e0b; color: #000; }
+</style>
+
+<button id="m5-reopen-btn">EVA SUIT HUD</button>
+
+<aside id="nasa-member5-hud">
+  <div class="m5-header">
+    <div>
+      <span class="m5-kicker">MEMBER 5 // SUIT &amp; WEATHER HUD</span>
+      <span class="m5-location-name" id="m5-loc-name">Jezero Crater (Perseverance)</span>
+      <span class="m5-coords" id="m5-loc-coords">18.44°N · 77.45°E</span>
+    </div>
+    <button class="m5-close-btn" id="m5-close-btn" title="Hide HUD">&times;</button>
+  </div>
+  <div class="m5-margin-card">
+    <div>
+      <div class="m5-margin-label">Safe Walk-Back Margin</div>
+      <div class="m5-margin-sub">O₂ &amp; Thermal Reserve (NASA DRA 5.0)</div>
+    </div>
+    <div class="m5-margin-time" id="m5-return-time">06:24</div>
+  </div>
+  <div class="m5-section-title"><span>Surface Weather &amp; Radiation</span><span>MEDA + RAD</span></div>
+  <div class="m5-grid">
+    <div class="m5-stat-box"><div class="m5-stat-label">SURFACE TEMP</div><div class="m5-stat-value"><span id="m5-temp">-56</span> <span class="m5-stat-unit">°C</span></div></div>
+    <div class="m5-stat-box"><div class="m5-stat-label">RADIATION LEVEL</div><div class="m5-stat-value"><span id="m5-rad">0.027</span> <span class="m5-stat-unit">mSv/h</span></div></div>
+    <div class="m5-stat-box"><div class="m5-stat-label">AIR PRESSURE</div><div class="m5-stat-value"><span id="m5-press">654</span> <span class="m5-stat-unit">Pa</span></div></div>
+    <div class="m5-stat-box"><div class="m5-stat-label">ELEVATION (MOLA)</div><div class="m5-stat-value"><span id="m5-elev">-2,574</span> <span class="m5-stat-unit">m</span></div></div>
+  </div>
+  <div class="m5-dust-strip">
+    <div><div class="m5-stat-label" style="margin-bottom:1px;">DUST STORM STATUS &amp; WIND</div><div style="font-size:12px; font-weight:600;" id="m5-wind">Wind: 11 m/s · UV Normal</div></div>
+    <span class="m5-badge m5-badge-safe" id="m5-dust-badge">CLEAR (τ 0.4)</span>
+  </div>
+  <div class="m5-section-title"><span>Astronaut xEMU Suit Status</span><span id="m5-effort">245 W · 78 BPM</span></div>
+  <div class="m5-bar-group"><div class="m5-bar-header"><span>Primary Oxygen (29.6 kPa)</span><strong id="m5-o2-val">93%</strong></div><div class="m5-bar-track"><div class="m5-bar-fill" id="m5-o2-bar" style="width:93%;"></div></div></div>
+  <div class="m5-bar-group"><div class="m5-bar-header"><span>Suit Battery &amp; Heater Loop</span><strong id="m5-batt-val">88%</strong></div><div class="m5-bar-track"><div class="m5-bar-fill" id="m5-batt-bar" style="width:88%;"></div></div></div>
+  <div class="m5-bar-group" style="margin-bottom:0;"><div class="m5-bar-header"><span>CO₂ Scrubber Load (RCA)</span><strong id="m5-co2-val">1.1 mmHg</strong></div><div class="m5-bar-track"><div class="m5-bar-fill" id="m5-co2-bar" style="width:20%;"></div></div></div>
+  <div class="m5-advisory" id="m5-advisory"><strong>STATUS NOMINAL:</strong> Click any location or marker on Mars to inspect suit &amp; weather telemetry.</div>
+</aside>
+
+<script>
+(function() {
+  const MARS_ZONES = [
+    { name: "Olympus Mons (Shield Volcano)", lat: 18.65, lng: -133.8, rad: 0.245, temp: -68, press: 72, tau: 0.18, wind: 19, elev: 21229, effort: 495, o2: 74, batt: 69 },
+    { name: "Ares Vallis (Pathfinder)", lat: 19.33, lng: -33.55, rad: 0.025, temp: -51, press: 710, tau: 0.48, wind: 13, elev: -3650, effort: 270, o2: 91, batt: 87 },
+    { name: "Jezero Crater (Perseverance)", lat: 18.44, lng: 77.45, rad: 0.027, temp: -56, press: 654, tau: 0.45, wind: 11, elev: -2574, effort: 245, o2: 93, batt: 88 },
+    { name: "Gale Crater (Curiosity)", lat: -5.45, lng: 137.84, rad: 0.026, temp: -52, press: 740, tau: 0.52, wind: 9, elev: -4501, effort: 250, o2: 91, batt: 86 },
+    { name: "Valles Marineris Canyon", lat: -13.9, lng: -59.2, rad: 0.019, temp: -44, press: 980, tau: 0.65, wind: 16, elev: -6200, effort: 310, o2: 86, batt: 82 },
+    { name: "Hellas Planitia Basin", lat: -42.4, lng: 70.5, rad: 0.018, temp: -49, press: 1155, tau: 0.78, wind: 14, elev: -7152, effort: 260, o2: 89, batt: 85 },
+    { name: "Syrtis Major Dust Front", lat: 8.4, lng: 69.5, rad: 0.031, temp: -74, press: 620, tau: 4.10, wind: 31, elev: -1200, effort: 380, o2: 79, batt: 71 },
+    { name: "North Polar Ice Cap (Phoenix)", lat: 68.22, lng: -125.7, rad: 0.033, temp: -94, press: 680, tau: 0.35, wind: 15, elev: -4100, effort: 340, o2: 82, batt: 61 },
+    { name: "Elysium Planitia (InSight)", lat: 4.5, lng: 135.62, rad: 0.027, temp: -58, press: 690, tau: 0.48, wind: 10, elev: -2655, effort: 240, o2: 94, batt: 90 }
+  ];
+
+  let currentEffortW = 245;
+  let currentRadMSvH = 0.027;
+
+  const hud = document.getElementById("nasa-member5-hud");
+  document.getElementById("m5-close-btn").onclick = () => { hud.style.display = "none"; };
+  document.getElementById("m5-reopen-btn").onclick = () => {
+    hud.style.display = (hud.style.display === "none") ? "block" : "none";
+  };
+
+  // Inject the Route Oxygen & Consumables Estimator Section into the HUD
+  const routeBox = document.createElement("div");
+  routeBox.id = "m5-route-calc-box";
+  routeBox.style.cssText = "display:none; margin-top:10px; background:#1c1917; border:1px solid rgba(245,158,11,0.45); border-radius:5px; padding:8px 10px;";
+  routeBox.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+      <span style="font-size:10px; font-weight:700; color:#f59e0b; letter-spacing:0.6px;">MEASURED ROUTE O₂ &amp; CONSUMABLES</span>
+      <span id="m5-route-dist-tag" style="font-size:10.5px; font-weight:700; color:#fff; font-family:monospace;">0.0 KM</span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:11px;">
+      <div style="background:rgba(0,0,0,0.35); padding:5px 7px; border-radius:4px;">
+        <div style="font-size:9px; color:#a8a29e;">OXYGEN NEEDED</div>
+        <div id="m5-route-o2" style="font-weight:700; color:#38bdf8; font-family:monospace;">0.00 kg (0%)</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.35); padding:5px 7px; border-radius:4px;">
+        <div style="font-size:9px; color:#a8a29e;">TRAVERSE TIME</div>
+        <div id="m5-route-time" style="font-weight:700; color:#f8fafc; font-family:monospace;">0.0 hrs</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.35); padding:5px 7px; border-radius:4px;">
+        <div style="font-size:9px; color:#a8a29e;">ROUTE RADIATION</div>
+        <div id="m5-route-rad" style="font-weight:700; color:#fbbf24; font-family:monospace;">0.00 mSv</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.35); padding:5px 7px; border-radius:4px;">
+        <div style="font-size:9px; color:#a8a29e;">SUIT FEASIBILITY</div>
+        <div id="m5-route-status" style="font-weight:700; color:#10b981; font-family:monospace;">SAFE EVA</div>
+      </div>
+    </div>
+  `;
+  hud.appendChild(routeBox);
+
+  // Watch the team's MARS DISTANCE MEASURE box and compute NASA O2 requirements live
+  setInterval(() => {
+    const pageText = document.body.innerText;
+    // Matches "TOTAL PATH DISTANCE \n 4,754.1 KM" or meters "850.0 M"
+    const distMatch = pageText.match(/TOTAL PATH DISTANCE[\s\S]{0,40}?([\d,.]+)\s*(KM|M)\b/i);
+
+    if (distMatch) {
+      let rawVal = parseFloat(distMatch[1].replace(/,/g, ""));
+      const unit = distMatch[2].toUpperCase();
+      const distKm = (unit === "M") ? (rawVal / 1000) : rawVal;
+
+      if (distKm > 0) {
+        routeBox.style.display = "block";
+        hud.style.display = "block";
+
+        // Speed: 4.5 km/h (1.25 m/s) for foot EVA <= 15 km; 12 km/h pressurized rover for long distances
+        const isRoverRange = distKm > 15;
+        const speedKmh = isRoverRange ? 12.0 : 4.5;
+        const travelHours = distKm / speedKmh;
+
+        // NASA-STD-3001 O2 consumption: 0.042 kg/hr at 245W baseline, scaled by terrain effort
+        const o2RateKgHr = 0.042 * (currentEffortW / 245);
+        const totalO2Kg = travelHours * o2RateKgHr;
+        // Standard xEMU usable primary O2 tank = 1.20 kg
+        const xemuTankPct = Math.round((totalO2Kg / 1.20) * 100);
+        const routeDoseMSv = travelHours * currentRadMSvH;
+
+        document.getElementById("m5-route-dist-tag").innerText =
+          `${distKm >= 10 ? distKm.toFixed(1) : distKm.toFixed(2)} KM (${isRoverRange ? "ROVER" : "EVA WALK"})`;
+        document.getElementById("m5-route-o2").innerText =
+          `${totalO2Kg.toFixed(2)} kg (${isRoverRange ? Math.ceil(totalO2Kg / 1.2) + " tanks" : xemuTankPct + "% suit"})`;
+        document.getElementById("m5-route-time").innerText =
+          travelHours >= 24 ? `${(travelHours / 24).toFixed(1)} Sols` : `${travelHours.toFixed(1)} hrs`;
+        document.getElementById("m5-route-rad").innerText = `${routeDoseMSv.toFixed(2)} mSv`;
+
+        const statusEl = document.getElementById("m5-route-status");
+        if (!isRoverRange && xemuTankPct > 85) {
+          statusEl.innerText = "O₂ EXCEEDED";
+          statusEl.style.color = "#ef4444";
+        } else if (isRoverRange) {
+          statusEl.innerText = "ROVER REQ.";
+          statusEl.style.color = "#f59e0b";
+        } else {
+          statusEl.innerText = "1-TANK SAFE";
+          statusEl.style.color = "#10b981";
+        }
+      }
+    } else {
+      routeBox.style.display = "none";
+    }
+  }, 400);
+
+  function updateHUD(lat, lng, label) {
+    const normLng = ((((lng + 180) % 360) + 360) % 360) - 180;
+    const clampedLat = Math.max(-90, Math.min(90, lat));
+
+    let data = null;
+    if (label) {
+      const byName = MARS_ZONES.find(z => label.toLowerCase().includes(z.name.split(" ")[0].toLowerCase()));
+      if (byName) data = { locationName: label, lat: clampedLat || byName.lat, lng: normLng || byName.lng, ...byName };
+    }
+    if (!data) {
+      let bestDist = Infinity;
+      for (const z of MARS_ZONES) {
+        const d = Math.hypot(clampedLat - z.lat, normLng - z.lng);
+        if (d < 10.0 && d < bestDist) { bestDist = d; data = { locationName: label || z.name, lat: clampedLat, lng: normLng, ...z }; }
+      }
+    }
+    if (!data) {
+      const absLat = Math.abs(clampedLat);
+      const temp = Math.round(-46 - (absLat / 90) * 58 + Math.sin(normLng * 0.08) * 6);
+      const elev = Math.round((clampedLat < 0 ? 1800 : -2600) + Math.cos(normLng * 0.05) * 1900);
+      const press = Math.max(65, Math.round(610 * Math.exp(-elev / 11100)));
+      const rad = +(0.025 + Math.max(0, elev + 3000) * 0.000008).toFixed(3);
+      const isDust = absLat > 10 && absLat < 35 && normLng > 30 && normLng < 95;
+      const tau = isDust ? +(2.4 + Math.abs(Math.sin(clampedLat)) * 1.6).toFixed(1) : +(0.38 + (absLat / 180)).toFixed(1);
+      const wind = isDust ? 27 : Math.round(9 + (absLat / 90) * 11);
+      const effort = elev > 1500 ? 430 : 255;
+      const o2 = Math.max(68, Math.round(95 - (absLat / 90) * 14));
+      const batt = Math.max(60, Math.round(92 - (temp < -80 ? 22 : 8)));
+      data = { locationName: label || (clampedLat >= 0 ? "Northern Lowlands Sector" : "Southern Highlands Sector"), lat: clampedLat, lng: normLng, rad, temp, press, tau, wind, elev, effort, o2, batt };
+    }
+
+    currentEffortW = data.effort;
+    currentRadMSvH = data.rad;
+
+    document.getElementById("m5-loc-name").innerText = data.locationName;
+    document.getElementById("m5-loc-coords").innerText = `${Math.abs(data.lat).toFixed(2)}°${data.lat >= 0 ? "N" : "S"} · ${Math.abs(data.lng).toFixed(2)}°${data.lng >= 0 ? "E" : "W"}`;
+    document.getElementById("m5-temp").innerText = data.temp;
+    document.getElementById("m5-rad").innerText = data.rad.toFixed(3);
+    document.getElementById("m5-press").innerText = data.press;
+    document.getElementById("m5-elev").innerText = data.elev.toLocaleString();
+    document.getElementById("m5-wind").innerText = `Wind: ${data.wind} m/s · ${data.tau >= 2.0 ? "UV Blocked" : "UV High"}`;
+
+    const dustBadge = document.getElementById("m5-dust-badge");
+    if (data.tau >= 2.5) { dustBadge.className = "m5-badge m5-badge-danger"; dustBadge.innerText = `STORM (τ ${data.tau})`; }
+    else if (data.tau >= 1.2) { dustBadge.className = "m5-badge m5-badge-caution"; dustBadge.innerText = `HAZE (τ ${data.tau})`; }
+    else { dustBadge.className = "m5-badge m5-badge-safe"; dustBadge.innerText = `CLEAR (τ ${data.tau})`; }
+
+    const bpm = Math.round(62 + (data.effort - 200) * 0.25);
+    document.getElementById("m5-effort").innerText = `${data.effort} W · ${bpm} BPM`;
+    document.getElementById("m5-o2-val").innerText = `${data.o2}%`;
+    document.getElementById("m5-o2-bar").style.width = `${data.o2}%`;
+    document.getElementById("m5-o2-bar").style.backgroundColor = data.o2 <= 30 ? "#ef4444" : data.o2 <= 60 ? "#f59e0b" : "#10b981";
+
+    document.getElementById("m5-batt-val").innerText = `${data.batt}%`;
+    document.getElementById("m5-batt-bar").style.width = `${data.batt}%`;
+    document.getElementById("m5-batt-bar").style.backgroundColor = data.batt <= 30 ? "#ef4444" : data.batt <= 60 ? "#f59e0b" : "#10b981";
+
+    const co2 = +(0.9 + (data.effort - 220) * 0.011).toFixed(1);
+    document.getElementById("m5-co2-val").innerText = `${co2} mmHg`;
+    document.getElementById("m5-co2-bar").style.width = `${Math.min(100, (co2 / 7.6) * 100)}%`;
+
+    const totalMins = Math.round(((Math.min(data.o2, data.batt) - 15) / 85) * 420 / (data.effort / 245));
+    const timeEl = document.getElementById("m5-return-time");
+    timeEl.innerText = `${String(Math.max(0, Math.floor(totalMins / 60))).padStart(2, "0")}:${String(Math.max(0, totalMins % 60)).padStart(2, "0")}`;
+
+    const advEl = document.getElementById("m5-advisory");
+    hud.classList.remove("hud-caution", "hud-danger");
+    if (data.rad >= 0.15 || data.tau >= 2.5) {
+      hud.classList.add("hud-danger"); timeEl.style.color = "#ef4444";
+      advEl.innerHTML = data.rad >= 0.15
+        ? `<strong>DANGER — HIGH RADIATION (${data.rad} mSv/h):</strong> High-altitude unshielded terrain. Reroute to lower elevation.`
+        : `<strong>DANGER — DUST STORM (τ ${data.tau}):</strong> Airborne dust blocks solar power and visibility. Seek shelter.`;
+    } else if (data.temp <= -85 || data.effort >= 400) {
+      hud.classList.add("hud-caution"); timeEl.style.color = "#f59e0b";
+      advEl.innerHTML = data.temp <= -85
+        ? `<strong>CAUTION — EXTREME COLD (${data.temp} °C):</strong> Suit heaters drawing extra power.`
+        : `<strong>CAUTION — STEEP CLIMB (${data.effort} W):</strong> High exertion accelerating oxygen use.`;
+    } else {
+      timeEl.style.color = "#10b981";
+      advEl.innerHTML = `<strong>STATUS NOMINAL:</strong> Radiation (${data.rad} mSv/h) and xEMU oxygen (${data.o2}%) within safe NASA limits.`;
+    }
+    hud.style.display = "block";
+  }
+
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("#nasa-member5-hud") || e.target.closest("#m5-reopen-btn")) return;
+    const mapEl = e.target.closest(".leaflet-container");
+    if (!mapEl) return;
+
+    setTimeout(() => {
+      const popupTitle = document.querySelector(".leaflet-popup-content h3, .leaflet-popup-content h2, .leaflet-popup-content strong");
+      const label = popupTitle ? popupTitle.innerText.trim() : null;
+      const textSource = (document.querySelector(".leaflet-popup-content")?.innerText || "") + " " + document.body.innerText;
+      const coordMatch = textSource.match(/([-\d.]+)\s*°\s*([NS])[,;\s]+([-\d.]+)\s*°\s*([EW])/i);
+
+      if (coordMatch) {
+        const lat = parseFloat(coordMatch[1]) * (coordMatch[2].toUpperCase() === "S" ? -1 : 1);
+        const lng = parseFloat(coordMatch[3]) * (coordMatch[4].toUpperCase() === "W" ? -1 : 1);
+        updateHUD(lat, lng, label);
+      } else {
+        const rect = mapEl.getBoundingClientRect();
+        const lng = ((e.clientX - rect.left) / rect.width) * 360 - 180;
+        const lat = 85 - ((e.clientY - rect.top) / rect.height) * 170;
+        updateHUD(lat, lng, label);
+      }
+    }, 80);
+  }, true);
+})();
+</script>
 </body>
+
 </html>
